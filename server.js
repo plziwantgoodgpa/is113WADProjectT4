@@ -3,7 +3,7 @@ const dotenv = require('dotenv');
 const mongoose = require('mongoose');
 const fs = require('fs');
 const server = express();
-const homeRoutes = require("./routes/homeRoutes");
+const songRoutes = require("./routes/songRoutes");
 
 // Specify the path to the environment variablef file 'config.env'
 dotenv.config({ path: './config.env' });
@@ -11,12 +11,13 @@ server.use(express.urlencoded({ extended: true }));
 server.set("view engine", "ejs");
 
 //Routes
-server.use("/", homeRoutes);
+server.use("/", songRoutes);
 
 // async function to connect to DB
 async function connectDB() {
   try {
     // connecting to Database with our config.env file and DB is constant in config.env
+    console.log(process.env.DB)
     await mongoose.connect(process.env.DB);
     console.log("MongoDB connected successfully");
   } catch (error) {
