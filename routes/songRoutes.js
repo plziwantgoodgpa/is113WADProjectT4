@@ -1,10 +1,10 @@
-const express = require("express");
+const express = require('express');
+const router = express();
 
-const router = express.Router();
+// Import the controller we just made
+const songController = require('../controllers/songController');
 
-router.get("/",(req,res)=>{
-    res.render("home")
-} );
-
+// When a GET request hits '/api/songs', run the getAllSongs function
+router.get('/', songController.getAllSongs);
 
 module.exports = router;
