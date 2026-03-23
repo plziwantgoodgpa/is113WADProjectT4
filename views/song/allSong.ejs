@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>All Songs</title>
+</head>
+<body>
+
+    <h1>All Songs Library</h1>
+
+    <% if (songs && songs.length > 0) { %>
+        
+        <table border="1" cellpadding="10" cellspacing="0">
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Song Name</th>
+                    <th>Artist</th>
+                    <th>Category</th>
+                    <th>Action</th>
+                </tr>
+            </thead>
+            <tbody>
+                
+                <% songs.forEach(function(song) { %>
+                    <tr>
+                        <td><%= song.song_id %></td>
+                        <td><%= song.songname %></td>
+                        <td><%= song.artist %></td>
+                        <td><%= song.category %></td>
+                        <td>
+                            <a href="/songDetail?songID=<%= song.song_id %>">View Details</a>
+                        </td>
+                    </tr>
+                <% }) %>
+
+            </tbody>
+        </table>
+
+    <% } else { %>
+        
+        <p>There are currently no songs in the database.</p>
+        
+    <% } %>
+
+</body>
+</html>

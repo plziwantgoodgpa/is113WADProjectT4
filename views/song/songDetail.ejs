@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Song Details</title>
+</head>
+<body>
+
+    <h1>Song Details</h1>
+
+    <% if (result != undefined && result != "Not Found") { %>
+        
+        <table border="1" cellpadding="10" cellspacing="0">
+            <tr>
+                <th>Song ID</th>
+                <td><%= result.song_id %></td>
+            </tr>
+            <tr>
+                <th>Song Name</th>
+                <td><%= result.songname %></td>
+            </tr>
+            <tr>
+                <th>Artist</th>
+                <td><%= result.artist %></td>
+            </tr>
+            <tr>
+                <th>Category</th>
+                <td><%= result.category %></td>
+            </tr>
+            <tr>
+                <th>Description</th>
+                <td><%= result.description %></td>
+            </tr>
+        </table>
+
+    <% } else { %>
+        
+        <p><strong>Sorry!</strong> We couldn't find a song with that ID in our database.</p>
+        
+    <% } %>
+
+    <br>
+    <a href="/song/Allsong">Go Back</a>
+
+</body>
+</html>

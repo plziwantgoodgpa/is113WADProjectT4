@@ -5,6 +5,16 @@ const router = express();
 const songController = require('../controllers/songController');
 
 // When a GET request hits '/api/songs', run the getAllSongs function
-router.get('/', songController.getAllSongs);
+router.get('/allSong', songController.getAllSongs);
+router.get('/songDetail', songController.getAllSongs);
+// ADD SONG
+router.get('/addSong', songController.renderAddSongForm); // Shows the blank form
+router.post('/addSong', songController.insertSong);       // Processes the form submission
 
+// EDIT SONG
+router.get('/editSong', songController.renderEditSongForm); // Shows form with existing data
+router.post('/editSong', songController.updateSong);        // Processes the update
+
+// DELETE SONG
+router.get('/deleteSong', songController.deleteSong);       // Deletes the song and redirects
 module.exports = router;

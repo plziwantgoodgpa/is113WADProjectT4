@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Edit Song</title>
+</head>
+<body>
+    <h1>Edit Song: <%= song.songname %></h1>
+    
+    <form action="/editSong" method="POST">
+        <label>Song ID (Cannot be changed):</label><br>
+        <input type="number" name="song_id" value="<%= song.song_id %>" readonly><br><br>
+
+        <label>Song Name:</label><br>
+        <input type="text" name="songname" value="<%= song.songname %>" required><br><br>
+
+        <label>Artist:</label><br>
+        <input type="text" name="artist" value="<%= song.artist %>" required><br><br>
+
+        <label>Category:</label><br>
+        <input type="text" name="category" value="<%= song.category %>" required><br><br>
+
+        <label>Description:</label><br>
+        <textarea name="description" required><%= song.description %></textarea><br><br>
+
+        <button type="submit">Update Song</button>
+    </form>
+    
+    <br>
+    <a href="/allSong">Cancel / Go Back</a>
+</body>
+</html>
