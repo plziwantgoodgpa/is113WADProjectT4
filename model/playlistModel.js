@@ -39,3 +39,25 @@ exports.retrieveAll = function() {
 exports.findByPlaylistId = function(playList_id) {
     return Playlist.findOne({ playList_id: playList_id });
 };
+
+exports.addPlaylist = async (user_id, playlistData) => {
+    try {
+        return await Playlist.create({
+            ...playlistData,        // spread the rest of the playlist data
+            user_id: user_id        // always force the user_id to the logged-in user
+        });
+    } catch (error) {
+        return null;
+    }
+}
+
+exports.deletePlaylist = async (playList_id, user_id) => {
+    try {
+        return await Playlist.findOneAndDelete({
+            playList_id: playList_id,
+            user_id: user_id         // ensures users can only delete their own playlists
+        });
+    } catch (error) {
+        return null;
+    }
+}
