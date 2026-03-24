@@ -1,11 +1,15 @@
 const express = require("express");
 
 const router = express.Router();
+const playlistController = require('../controllers/playlistController');
 
-router.get("/",(req,res)=>{
-    const user_id = //find user id func
-    res.render("playlist", {user_id})
-} );
+router.get("/", (req, res) => {
+    res.send("Playlist home");
+});
 
+router.get('/create', playlistController.showCreatePlaylist);
+router.post('/create', playlistController.createPlaylist);
 
+router.get('/remove/:id', playlistController.showRemoveSongPage);
+router.get('/remove/:playlistId/:songId', playlistController.removeSong);
 module.exports = router;

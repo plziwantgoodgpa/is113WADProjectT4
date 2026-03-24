@@ -36,6 +36,27 @@ exports.retrieveAll = function() {
     return Playlist.find();
 };
 
+exports.retrieveByUserId = function(user_id) {
+    return Playlist.find({ user_id: user_id });
+};
+
+exports.removeSongFromPlaylist = async (playList_id, user_id, song_id) => {
+    try {
+        return await Playlist.findOneAndUpdate(
+            {
+                playList_id: playList_id,
+                user_id: user_id
+            },
+            {
+                $pull: { songs: { song_id: song_id } }
+            },
+            { new: true }
+        );
+    } catch (error) {
+        return null;
+    }
+};
+
 exports.findByPlaylistId = function(playList_id) {
     return Playlist.findOne({ playList_id: playList_id });
 };
