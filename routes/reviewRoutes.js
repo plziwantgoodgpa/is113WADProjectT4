@@ -1,15 +1,17 @@
-const express = require('express');
-const router = express();
 
-// Import the review controller
-const reviewController = require('../controllers/reviewController');
+const express = require("express");
+const router = express.Router();
+const reviewController = require("../controllers/reviewController");
 
-// Import the songs controller to show all the songs
-// const songController = require('../controllers/songController');
+router.post("/add-review", reviewController.addReview);
+router.post("/edit-review", reviewController.editReview);
+router.post("/delete-review", reviewController.deleteReview);
 
-// show all songs for them to pick the song that they want to review
-// router.get("/reviewShowAllSongs", songController.getAllSongs)
-
-// once they select the song, they can leave a review
-router.get("/reviewShowAllSongs", reviewController.getReviewsPage)
 module.exports = router;
+
+
+
+
+
+
+

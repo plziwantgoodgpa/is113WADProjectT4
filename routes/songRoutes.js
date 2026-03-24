@@ -17,4 +17,19 @@ router.post('/editSong', songController.updateSong);        // Processes the upd
 
 // DELETE SONG
 router.get('/deleteSong', songController.deleteSong);       // Deletes the song and redirects
+
+
+
+
+
+//// REVIEW TRIALL THIS IS FOR THE REVIEW SECTION BUT NEED TO MERGE. 
+
+
+
+router.get("/allSongs", songController.retrieveAllSongs);
+router.get("/songDetail", songController.songDetail);
+
+
+//
+
 module.exports = router;

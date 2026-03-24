@@ -25,6 +25,7 @@ const reviewSchema = new mongoose.Schema({
     }
 });
 
+
 const Review = mongoose.model('Review', reviewSchema, 'Review');
 
 exports.retrieveAll = function() {
@@ -38,7 +39,7 @@ exports.findBySongId = function(song_id) {
 exports.findOneReview = function(song_id, user_id) {
     return Review.findOne({ song_id: song_id, user_id: user_id });
 };
-
+// creating a new review 
 exports.addReview = function(reviewData) {
     return Review.create(reviewData);
 };

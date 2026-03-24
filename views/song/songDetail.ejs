@@ -48,3 +48,154 @@
 
 </body>
 </html>
+
+
+
+
+
+
+
+
+
+
+
+
+
+<!-- 
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Song Detail</title>
+</head>
+<body>
+
+    <% if (song) { %>
+        <h1><%= song.songname %></h1>
+
+        <p><strong>Song ID:</strong> <%= song.song_id %></p>
+        <p><strong>Artist:</strong> <%= song.artist %></p>
+        <p><strong>Category:</strong> <%= song.category %></p>
+        <p><strong>Description:</strong> <%= song.description %></p>
+
+        <p>
+            <strong>Average Rating:</strong>
+            <% if (averageRating > 0) { %>
+                <%= averageRating.toFixed(1) %>
+            <% } else { %>
+                No ratings yet
+            <% } %>
+        </p>
+
+        <hr>
+
+        <h2>All Reviews</h2>
+
+        <% if (reviews && reviews.length > 0) { %>
+            <table border="1" cellpadding="10" cellspacing="0">
+                <thead>
+                    <tr>
+                        <th>User ID</th>
+                        <th>Rating</th>
+                        <th>Review</th>
+                        <th>Date</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <% reviews.forEach(function(review) { %>
+                        <tr>
+                            <td><%= review.user_id %></td>
+                            <td><%= review.rating %></td>
+                            <td><%= review.reviewMessage %></td>
+                            <td><%= review.review_date_time %></td>
+                        </tr>
+                    <% }) %>
+                </tbody>
+            </table>
+        <% } else { %>
+            <p>No reviews for this song yet.</p>
+        <% } %>
+
+        <hr>
+
+        <% if (user_id) { %>
+
+            <% if (error) { %>
+                <p><%- error %></p>
+            <% } %>
+
+            <% if (userReview === null) { %>
+                <h2>Write Review</h2>
+
+                <form action="/review/add-review" method="post">
+                    <input type="hidden" name="song_id" value="<%= song.song_id %>">
+
+                    <label>Rating:</label>
+                    <select name="rating">
+                        <option value="">Select rating</option>
+                        <option value="1" <%= formData.rating == 1 ? "selected" : "" %>>1</option>
+                        <option value="2" <%= formData.rating == 2 ? "selected" : "" %>>2</option>
+                        <option value="3" <%= formData.rating == 3 ? "selected" : "" %>>3</option>
+                        <option value="4" <%= formData.rating == 4 ? "selected" : "" %>>4</option>
+                        <option value="5" <%= formData.rating == 5 ? "selected" : "" %>>5</option>
+                    </select>
+
+                    <br><br>
+
+                    <label>Review Message:</label><br>
+                    <textarea name="reviewMessage" rows="4" cols="50"><%= formData.reviewMessage %></textarea>
+
+                    <br><br>
+
+                    <button type="submit">Submit Review</button>
+                </form>
+
+            <% } else { %>
+                <h2>Edit Your Review</h2>
+
+                <form action="/review/edit-review" method="post">
+                    <input type="hidden" name="song_id" value="<%= song.song_id %>">
+
+                    <label>Rating:</label>
+                    <select name="rating">
+                        <option value="1" <%= userReview.rating == 1 ? "selected" : "" %>>1</option>
+                        <option value="2" <%= userReview.rating == 2 ? "selected" : "" %>>2</option>
+                        <option value="3" <%= userReview.rating == 3 ? "selected" : "" %>>3</option>
+                        <option value="4" <%= userReview.rating == 4 ? "selected" : "" %>>4</option>
+                        <option value="5" <%= userReview.rating == 5 ? "selected" : "" %>>5</option>
+                    </select>
+
+                    <br><br>
+
+                    <label>Review Message:</label><br>
+                    <textarea name="reviewMessage" rows="4" cols="50"><%= userReview.reviewMessage %></textarea>
+
+                    <br><br>
+
+                    <button type="submit">Update Review</button>
+                </form>
+
+                <br>
+
+                <form action="/review/delete-review" method="post">
+                    <input type="hidden" name="song_id" value="<%= song.song_id %>">
+                    <button type="submit">Delete Review</button>
+                </form>
+            <% } %>
+
+        <% } else { %>
+            <p>Please log in to write, edit or delete a review.</p>
+        <% } %>
+
+        <br>
+        <a href="/song/allSongs">Back to All Songs</a>
+
+    <% } else { %>
+        <p>Song not found.</p>
+    <% } %>
+
+</body>
+</html>
+
+ REVIEW EJS NEEDS THIS PART, LETS SEE HOW TO MERGE!!-->

@@ -140,3 +140,54 @@ exports.deleteSong = async (req, res) => {
         res.send("Error deleting the song");
     }
 };
+
+
+
+
+// -- ADDED THIS SECTION FOR REVIEWS!!! TRIALLL ----//////
+
+const songModel = require('../model/songModel');
+const reviewModel = require('../model/reviewModel');
+
+exports.retrieveAllSongs = async function(req, res) {
+    const songs = await songModel.retrieveAll();
+
+    res.render('song/allSong', {
+        songs: songs,
+        userRole: req.session.userRole
+    });
+};
+
+exports.songDetail = async function(req, res) {
+    const songID = parseInt(req.query.songID);
+
+    const song = await songModel.findBySongId(songID);
+    const reviews = await reviewModel.findBySongId(songID);
+
+    let userReview = null;
+    if (req.session.user_id) {
+        userReview = await reviewModel.findOneReview(songID, req.session.user_id);
+    }
+
+    let averageRating = 0;
+    if (reviews.length > 0) {
+        let total = 0;
+        for (let review of reviews) {
+            total += review.rating;
+        }
+        averageRating = total / reviews.length;
+    }
+
+    res.render('song/songDetail', {
+        song: song,
+        reviews: reviews,
+        userReview: userReview,
+        averageRating: averageRating,
+        error: "",
+        formData: {
+            rating: "",
+            reviewMessage: ""
+        },
+        user_id: req.session.user_id || null
+    });
+};
