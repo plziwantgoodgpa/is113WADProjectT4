@@ -5,6 +5,7 @@ const fs = require('fs');
 const server = express();
 const songRoutes = require("./routes/songRoutes");
 const reviewRoutes = require("./routes/reviewRoutes")
+const playlistRoutes = require("./routes/playlistRoutes");
 
 // Specify the path to the environment variablef file 'config.env'
 dotenv.config({ path: './config.env' });
@@ -14,6 +15,7 @@ server.set("view engine", "ejs");
 //Routes
 server.use("/song", songRoutes);
 server.use("/review", reviewRoutes)
+server.use("/playlist", playlistRoutes);
 
 // async function to connect to DB
 async function connectDB() {

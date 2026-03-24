@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Create Playlist</title>
+</head>
+<body>
+
+<h1>Create Playlist</h1>
+
+<form action="/playlist/create" method="POST">
+    
+    <div>
+        <label>Playlist ID:</label>
+        <input type="number" name="playList_id" required>
+    </div>
+
+    <div>
+        <label>Playlist Name:</label>
+        <input type="text" name="PlayListName" required>
+    </div>
+
+    <button type="submit">Create</button>
+
+</form>
+
+<br>
+<a href="/playlist">Back</a>
+
+</body>
+</html>
