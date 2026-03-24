@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>My Playlists</title>
+</head>
+<body>
+
+    <h1>My Playlists</h1>
+
+    <% if (playlists.length === 0) { %>
+        <p>You have no playlists yet.</p>
+    <% } else { %>
+        <% playlists.forEach(playlist => { %>
+            <p>
+                <a href="/playlist/<%= playlist.playList_id %>">
+                    <%= playlist.PlayListName %>
+                </a>
+            </p>
+        <% }) %>
+    <% } %>
+
+
+</body>
+</html>

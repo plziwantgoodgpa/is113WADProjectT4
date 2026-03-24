@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title><%= playlist.PlayListName %></title>
+</head>
+<body>
+
+    <a href="/playlist">Back</a>
+    <h1><%= playlist.PlayListName %></h1>
+    
+    <h2>Songs</h2>
+    <% if (playlist.songs.length === 0) { %>
+        <p>No songs yet.</p>
+    <% } else { %>
+        <% playlist.songs.forEach(song => { %>
+            <p>
+                Song ID: <%= song.song_id %>
+
+                <!-- Remove song -->
+                <form action="/playlist/<%= playlist.playList_id %>/songs/delete" method="POST">
+                    <input type="hidden" name="song_id" value="<%= song.song_id %>">
+                    <button type="submit">Remove</button>
+                </form>
+            </p>
+        <% }) %>
+    <% } %>
+
+</body>
+</html>

@@ -72,3 +72,9 @@ await Playlist.removeSongFromPlaylist(playList_id, req.body.user_id, song_id);
         res.send('Error removing song');
     }
 };
+
+exports.getAllPlaylist = async (req,res) =>{
+    const user_id = req.body.user_id;
+        const playlists = await Playlist.find({ user_id: user_id });
+        res.render('/playlists', { playlists, user_id });
+}
