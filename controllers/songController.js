@@ -7,7 +7,7 @@
 // }
 
 // 1. Import the Song model
-const Song = require('../model/SongModel');
+const Song = require('../model/songModel');
 
 // 2. Create and export the "Retrieve All" function
 exports.getAllSongs = async (req, res) => {
