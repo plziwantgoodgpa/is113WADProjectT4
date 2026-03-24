@@ -30,7 +30,8 @@ exports.showCreatePlaylist = (req, res) => {
 
 exports.createPlaylist = async (req, res) => {
     try {
-        const { user_id, playList_id, PlayListName } = req.body;
+        const { playList_id, PlayListName } = req.body;
+        const user_id = "testuser1";
 
         await Playlist.addPlaylist(user_id, {
             playList_id: parseInt(playList_id),
