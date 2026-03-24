@@ -18,7 +18,7 @@
             </tr>
             <tr>
                 <th>Song Name</th>
-                <td><%= result.songname %></td>
+                <td><%= result.songName %></td>
             </tr>
             <tr>
                 <th>Artist</th>
@@ -33,14 +33,17 @@
                 <td><%= result.description %></td>
             </tr>
         </table>
-
+        <br>
+        <% if (userRole == "admin") {%>
+              <a href="/song/editSong?songID=<%= result.song_id %>">Edit</a>
+        <%} %>
     <% } else { %>
         
         <p><strong>Sorry!</strong> We couldn't find a song with that ID in our database.</p>
         
     <% } %>
 
-    <br>
+    <br><br>
     <a href="/song/Allsong">Go Back</a>
 
 </body>

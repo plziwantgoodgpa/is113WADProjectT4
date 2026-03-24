@@ -7,10 +7,7 @@
 <body>
     <h1>Add a New Song</h1>
     
-    <form action="/addSong" method="POST">
-        <label>Song ID:</label><br>
-        <input type="number" name="song_id" required><br><br>
-
+    <form action="/song/addSong" method="POST">
         <label>Song Name:</label><br>
         <input type="text" name="songname" required><br><br>
 
@@ -27,6 +24,6 @@
     </form>
     
     <br>
-    <a href="/allSong">Cancel / Go Back</a>
+    <a href="/song/allSong">Cancel / Go Back</a>
 </body>
 </html>
