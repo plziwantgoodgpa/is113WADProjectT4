@@ -21,18 +21,35 @@ const reviewSchema = new mongoose.Schema({
     },
     review_date_time: {
         type: Date,
-        default: Date.now 
+        default: Date.now
     }
 });
 
 const Review = mongoose.model('Review', reviewSchema, 'Review');
 
-// Methods
 exports.retrieveAll = function() {
     return Review.find();
 };
 
 exports.findBySongId = function(song_id) {
-    // Used .find() instead of .findOne() because a song can have multiple reviews
-    return Review.find({ song_id: song_id }); 
+    return Review.find({ song_id: song_id });
+};
+
+exports.findOneReview = function(song_id, user_id) {
+    return Review.findOne({ song_id: song_id, user_id: user_id });
+};
+
+exports.addReview = function(reviewData) {
+    return Review.create(reviewData);
+};
+
+exports.editReview = function(song_id, user_id, updatedData) {
+    return Review.updateOne(
+        { song_id: song_id, user_id: user_id },
+        updatedData
+    );
+};
+
+exports.deleteReview = function(song_id, user_id) {
+    return Review.deleteOne({ song_id: song_id, user_id: user_id });
 };
