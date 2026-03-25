@@ -9,33 +9,35 @@
 
     <h1>Song Details</h1>
 
-    <% if (result != undefined && result != "Not Found") { %>
+    <% if (song != undefined && song != "Not Found") { %>
         
         <table border="1" cellpadding="10" cellspacing="0">
             <tr>
                 <th>Song ID</th>
-                <td><%= result.song_id %></td>
+                <td><%= song.song_id %></td>
             </tr>
             <tr>
                 <th>Song Name</th>
-                <td><%= result.songName %></td>
+                <td><%= song.songname %></td>
             </tr>
             <tr>
                 <th>Artist</th>
-                <td><%= result.artist %></td>
+                <td><%= song.artist %></td>
             </tr>
             <tr>
                 <th>Category</th>
-                <td><%= result.category %></td>
+                <td><%= song.category %></td>
             </tr>
             <tr>
                 <th>Description</th>
-                <td><%= result.description %></td>
+                <td><%= song.description %></td>
             </tr>
         </table>
         <br>
         <% if (userRole == "admin") {%>
-              <a href="/song/editSong?songID=<%= result.song_id %>">Edit</a>
+              <a href="/song/editSong?songID=<%= song.song_id %>">Edit</a>
+              <br>
+              <a href="/song/deleteSong?songID=<%= song.song_id %>">Delete</a>
         <%} %>
     <% } else { %>
         
@@ -71,28 +73,28 @@
 </head>
 <body>
 
-    <% if (song) { %>
-        <h1><%= song.songname %></h1>
+    <% //if (song) { %>
+        <h1><%= //song.songname %></h1>
 
-        <p><strong>Song ID:</strong> <%= song.song_id %></p>
-        <p><strong>Artist:</strong> <%= song.artist %></p>
-        <p><strong>Category:</strong> <%= song.category %></p>
-        <p><strong>Description:</strong> <%= song.description %></p>
+        <p><strong>Song ID:</strong> <%= //song.song_id %></p>
+        <p><strong>Artist:</strong> <%= //song.artist %></p>
+        <p><strong>Category:</strong> <%= //song.category %></p>
+        <p><strong>Description:</strong> <%= //song.description %></p>
 
         <p>
             <strong>Average Rating:</strong>
-            <% if (averageRating > 0) { %>
-                <%= averageRating.toFixed(1) %>
-            <% } else { %>
+            <% //if (averageRating > 0) { %>
+                <%= //averageRating.toFixed(1) %>
+            <% //} else { %>
                 No ratings yet
-            <% } %>
+            <% //} %>
         </p>
 
         <hr>
 
         <h2>All Reviews</h2>
 
-        <% if (reviews && reviews.length > 0) { %>
+        <% //if (reviews && reviews.length > 0) { %>
             <table border="1" cellpadding="10" cellspacing="0">
                 <thead>
                     <tr>
@@ -103,73 +105,73 @@
                     </tr>
                 </thead>
                 <tbody>
-                    <% reviews.forEach(function(review) { %>
+                    <% //reviews.forEach(function(review) { %>
                         <tr>
-                            <td><%= review.user_id %></td>
-                            <td><%= review.rating %></td>
-                            <td><%= review.reviewMessage %></td>
-                            <td><%= review.review_date_time %></td>
+                            <td><%= //review.user_id %></td>
+                            <td><%= //review.rating %></td>
+                            <td><%= //review.reviewMessage %></td>
+                            <td><%= //review.review_date_time %></td>
                         </tr>
-                    <% }) %>
+                    <% //}) %>
                 </tbody>
             </table>
-        <% } else { %>
+        <% //} else { %>
             <p>No reviews for this song yet.</p>
-        <% } %>
+        <% //} %>
 
         <hr>
 
-        <% if (user_id) { %>
+        <% //if (user_id) { %>
 
-            <% if (error) { %>
-                <p><%- error %></p>
-            <% } %>
+            <% //if (error) { %>
+                <p><%- //error %></p>
+            <% //} %>
 
-            <% if (userReview === null) { %>
+            <% //if (userReview === null) { %>
                 <h2>Write Review</h2>
 
                 <form action="/review/add-review" method="post">
-                    <input type="hidden" name="song_id" value="<%= song.song_id %>">
+                    <input type="hidden" name="song_id" value="<%= //song.song_id %>">
 
                     <label>Rating:</label>
                     <select name="rating">
                         <option value="">Select rating</option>
-                        <option value="1" <%= formData.rating == 1 ? "selected" : "" %>>1</option>
-                        <option value="2" <%= formData.rating == 2 ? "selected" : "" %>>2</option>
-                        <option value="3" <%= formData.rating == 3 ? "selected" : "" %>>3</option>
-                        <option value="4" <%= formData.rating == 4 ? "selected" : "" %>>4</option>
-                        <option value="5" <%= formData.rating == 5 ? "selected" : "" %>>5</option>
+                        <option value="1" <%= //formData.rating == 1 ? "selected" : "" %>>1</option>
+                        <option value="2" <%= //formData.rating == 2 ? "selected" : "" %>>2</option>
+                        <option value="3" <%= //formData.rating == 3 ? "selected" : "" %>>3</option>
+                        <option value="4" <%= //formData.rating == 4 ? "selected" : "" %>>4</option>
+                        <option value="5" <%= //formData.rating == 5 ? "selected" : "" %>>5</option>
                     </select>
 
                     <br><br>
 
                     <label>Review Message:</label><br>
-                    <textarea name="reviewMessage" rows="4" cols="50"><%= formData.reviewMessage %></textarea>
+                    <textarea name="reviewMessage" rows="4" cols="50"><%= //formData.reviewMessage %></textarea>
 
                     <br><br>
 
                     <button type="submit">Submit Review</button>
                 </form>
 
-            <% } else { %>
+            <% //} else { %>
                 <h2>Edit Your Review</h2>
 
                 <form action="/review/edit-review" method="post">
-                    <input type="hidden" name="song_id" value="<%= song.song_id %>">
+                    <input type="hidden" name="song_id" value="<%= //song.song_id %>">
 
                     <label>Rating:</label>
                     <select name="rating">
-                        <option value="1" <%= userReview.rating == 1 ? "selected" : "" %>>1</option>
-                        <option value="2" <%= userReview.rating == 2 ? "selected" : "" %>>2</option>
-                        <option value="3" <%= userReview.rating == 3 ? "selected" : "" %>>3</option>
-                        <option value="4" <%= userReview.rating == 4 ? "selected" : "" %>>4</option>
-                        <option value="5" <%= userReview.rating == 5 ? "selected" : "" %>>5</option>
+                        <option value="1" <%= //userReview.rating == 1 ? "selected" : "" %>>1</option>
+                        <option value="2" <%= //userReview.rating == 2 ? "selected" : "" %>>2</option>
+                        <option value="3" <%= //userReview.rating == 3 ? "selected" : "" %>>3</option>
+                        <option value="4" <%= //userReview.rating == 4 ? "selected" : "" %>>4</option>
+                        <option value="5" <%= //userReview.rating == 5 ? "selected" : "" %>>5</option>
                     </select>
 
                     <br><br>
 
                     <label>Review Message:</label><br>
-                    <textarea name="reviewMessage" rows="4" cols="50"><%= userReview.reviewMessage %></textarea>
+                    <textarea name="reviewMessage" rows="4" cols="50"><%= //userReview.reviewMessage %></textarea>
 
                     <br><br>
 
@@ -179,23 +181,23 @@
                 <br>
 
                 <form action="/review/delete-review" method="post">
-                    <input type="hidden" name="song_id" value="<%= song.song_id %>">
+                    <input type="hidden" name="song_id" value="<%= //song.song_id %>">
                     <button type="submit">Delete Review</button>
                 </form>
-            <% } %>
+            <% //} %>
 
-        <% } else { %>
+        <% //} else { %>
             <p>Please log in to write, edit or delete a review.</p>
-        <% } %>
+        <% //} %>
 
         <br>
         <a href="/song/allSongs">Back to All Songs</a>
 
-    <% } else { %>
+    <% //} else { %>
         <p>Song not found.</p>
-    <% } %>
+    <% //} %>
 
 </body>
 </html>
 
- REVIEW EJS NEEDS THIS PART, LETS SEE HOW TO MERGE!!-->
+ REVIEW EJS NEEDS THIS PART, LETS SEE HOW TO MERGE!! -->

@@ -1,18 +1,18 @@
-const songs = [{
-    song_id : 1,
-    songName: "Song1",
-    artist: "me",
-    category: "test",
-    description: "for test only"
-},
-{
-    song_id : 2,
-    songName: "Song2",
-    artist: "me2",
-    category: "test2",
-    description: "for test2 only"
-}
-]
+// const songs = [{
+//     song_id : 1,
+//     songName: "Song1",
+//     artist: "me",
+//     category: "test",
+//     description: "for test only"
+// },
+// {
+//     song_id : 2,
+//     songName: "Song2",
+//     artist: "me2",
+//     category: "test2",
+//     description: "for test2 only"
+// }
+// ]
 const userRole ="admin"
 // 1. Import the Song model
 const Song = require('../model/songModel');
@@ -21,7 +21,7 @@ const Song = require('../model/songModel');
 exports.getAllSongs = async (req, res) => {
     try {
         // THE FORMULA: .find() with no arguments returns everything in the collection
-        // const songs = await Song.retrieveAll(); 
+        let songs = await Song.retrieveAll(); 
         console.log(songs)
         // Send a successful response back to the client
         res.render("song/allSong",{songs,userRole})
@@ -46,19 +46,19 @@ exports.getSongBySongID = async (req, res) => {
     try {
         // 2. Fetch the song using the correct model and method
         // Using the findBySongId method we defined earlier
-        // let song = await Song.findBySongId(songID); 
-        let song = songs[songID-1]
+        let song = await Song.findBySongId(songID); 
+        // let song = songs[songID-1]
         console.log(song)
         // 3. Handle the case where the ID is valid, but the song doesn't exist
         if (!song) {
             console.log("Did not find a song with ID:", songID);
             // Render the page but pass null so your EJS knows to show a "Not Found" message
-            return res.render("song/songDetail", { result: "Not Found" ,userRole:userRole}); 
+            return res.render("song/songDetail", { song: "Not Found" ,userRole:userRole}); 
         }
 
         // 4. Success!
-        console.log("This is the Song I found: " + song.songName);
-        res.render("song/songDetail", { result: song ,userRole:userRole}); 
+        console.log("This is the Song I found: " + song.songname);
+        res.render("song/songDetail", { song: song ,userRole:userRole}); 
 
     } catch (error) {
         // 5. Catch real database errors (like network failures)
@@ -80,7 +80,7 @@ exports.insertSong = async (req, res) => {
     console.log(song)
     try {
         // req.body contains all the data typed into your HTML form
-        await SongModel.addSong(song); 
+        await Song.addSong(song); 
         res.redirect("/song/allSong");
     } catch (error) {
         console.error(error);
@@ -100,8 +100,8 @@ exports.showEditSongForm = async (req, res) => {
 
     try {
         // 3. Use your custom model method to find the specific song
-        // let song = await SongModel.findBySongId(songID);
-        let song = songs[songID-1]
+        let song = await Song.findBySongId(songID);
+        // let song = songs[songID-1]
         // 4. If someone typed in a fake ID that isn't in the database
         if (!song) {
             console.log("Could not find song ID to edit:", songID);
@@ -121,7 +121,7 @@ exports.updateSong = async (req, res) => {
     try {
         // req.body.song_id tells it WHICH song to update
         // req.body contains the newly updated text
-        await SongModel.editSong(req.body.song_id, req.body);
+        await Song.editSong(req.body.song_id, req.body);
         res.redirect("/song/allSong");
     } catch (error) {
         console.error(error);
@@ -133,7 +133,7 @@ exports.updateSong = async (req, res) => {
 exports.deleteSong = async (req, res) => {
     let songID = req.query.songID; // Gets the ID from the URL (e.g., ?songID=101)
     try {
-        await SongModel.deleteSong(songID);
+        await Song.deleteSong(songID);
         res.redirect("/song/allSong");
     } catch (error) {
         console.error(error);
