@@ -1,5 +1,5 @@
 const express = require('express');
-const router = express();
+const router = express.Router();
 
 // Import the controller we just made
 const songController = require('../controllers/songController');

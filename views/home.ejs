@@ -3,7 +3,7 @@
     <a href="/song/allsong">song</a>
     <a href="/playlist">playlist</a>
     <% if (user == "Not logged in") { %>
-        <a href="/login">Log in</a>
+        <a href="/user/login">Log in</a>
    <% }else{ %>
     <a href="/profile?<%= user.username %>">Profile</a>
     <% } %>

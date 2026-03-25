@@ -1,18 +1,14 @@
 const mongoose = require('mongoose');
 
 const userSchema = new mongoose.Schema({
-    user_id: {
-        type: String,
-        required: [true, 'A user must have a user_id'],
-        unique: true
-    },
     pwd: {
         type: String,
         required: [true, 'A user must have a password']
     },
     username: {
         type: String,
-        required: [true, 'A user must have a username']
+        required: [true, 'A user must have a username'],
+        unique: true
     },
     email: {
         type: String,
@@ -34,6 +30,12 @@ exports.retrieveAll = function() {
     return User.find();
 };
 
-exports.findByUserId = function(user_id) {
-    return User.findOne({ user_id: user_id });
+exports.findUser = function(username) {
+    return User.findOne({ username : username });
 };
+
+// add this to userModel.js
+exports.addUser = function(userData) {
+    return User.create(userData);
+};
+
