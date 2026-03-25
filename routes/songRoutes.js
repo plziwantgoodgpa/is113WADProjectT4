@@ -18,6 +18,8 @@ router.post('/editSong', songController.updateSong);        // Processes the upd
 // DELETE SONG
 router.get('/deleteSong', songController.deleteSong);       // Deletes the song and redirects
 
+//Search song
+router.get('/search', songController.searchSongs);
 
 
 

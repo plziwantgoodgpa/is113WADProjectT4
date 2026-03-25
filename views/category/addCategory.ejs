@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Add Category</title>
+</head>
+<body>
+    <h1>Add a New Category</h1>
+    
+    <form action="/category/addCategory" method="POST">
+        <label>Category Name:</label><br>
+        <input type="text" name="name" required><br><br>
+
+        <label>Description:</label><br>
+        <textarea name="description" required></textarea><br><br>
+
+        <button type="submit">Save Category</button>
+    </form>
+    
+    <br>
+    <a href="/category/allCategories">Cancel / Go Back</a>
+</body>
+</html>

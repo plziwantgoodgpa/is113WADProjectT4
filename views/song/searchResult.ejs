@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Search Songs</title>
+</head>
+<body>
+    <h1>Search the Song Library</h1>
+
+   
+    
+    <br>
+    <a href="/song/allSong">Clear Search / View All Songs</a>
+    <hr>
+
+    <h2>Results <%= searchTerm ? 'for "' + searchTerm + '"' : '' %></h2>
+
+    <% if (songs && songs.length > 0) { %>
+        <table border="1" cellpadding="10" cellspacing="0">
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Song Name</th>
+                    <th>Artist</th>
+                    <th>Category</th>
+                    <th>Action</th>
+                </tr>
+            </thead>
+            <tbody>
+                <% songs.forEach(function(song) { %>
+                    <tr>
+                        <td><%= song.song_id %></td>
+                        <td><%= song.songname %></td>
+                        <td><%= song.artist %></td>
+                        <td><%= song.category %></td>
+                        <td>
+                            <a href="/song/songDetail?songID=<%= song.song_id %>">View Details</a> 
+                        </td>
+                    </tr>
+                <% }) %>
+            </tbody>
+        </table>
+    <% } else { %>
+        <p>No songs found matching your search. Try another word!</p>
+    <% } %>
+
+</body>
+</html>

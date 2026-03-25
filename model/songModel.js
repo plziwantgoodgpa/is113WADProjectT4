@@ -14,6 +14,10 @@ const songSchema = new mongoose.Schema({
         type: String,
         required: [true, 'A song must have an artist']
     },
+    category_id:{
+        type: Number,
+        required: [true, 'A song must have a category_id'],
+    },
     category: {
         type: String,
         required: [true, 'A song must have a category']
@@ -71,4 +75,19 @@ exports.editSong = function(song_id, updatedData) {
 exports.deleteSong = function(song_id) {
     // Finds the specific song and removes it from MongoDB
     return Song.findOneAndDelete({ song_id: song_id });
+};
+
+//search song
+// SEARCH SONGS (By Name or Category)
+// SEARCH SONGS (By Song Name Only - Partial & Case-Insensitive)
+exports.searchSongs = function(searchTerm) {
+    return Song.find({
+        $or: [
+            // Checks if the search word is in the song name
+            { songname: { $regex: searchTerm, $options: 'i' } },
+            
+            // Checks if the search word is in the category name
+            { category: { $regex: searchTerm, $options: 'i' } }
+        ]
+    });
 };

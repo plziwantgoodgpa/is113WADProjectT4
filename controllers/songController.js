@@ -141,7 +141,29 @@ exports.deleteSong = async (req, res) => {
     }
 };
 
+//search song
+// --- SEARCH SONGS ---
+exports.searchSongs = async (req, res) => {
+    // We use 'q' for query, which will come from our search form input
+    let searchTerm = req.query.searchTerm; 
 
+    try {
+        let songs = [];
+        
+        // If the user actually typed something, run the search
+        if (searchTerm) {
+            songs = await Song.searchSongs(searchTerm);
+        } 
+        console.log(songs)
+        console.log(searchTerm)
+        // Send BOTH the songs array and the search term back to the page
+        res.render("song/searchResult", { songs: songs, searchTerm: searchTerm });
+        
+    } catch (error) {
+        console.error("Search error:", error);
+        res.status(500).send("Error performing search");
+    }
+};
 
 
 // -- ADDED THIS SECTION FOR REVIEWS!!! TRIALLL ----//////

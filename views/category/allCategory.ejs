@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>All Categories</title>
+</head>
+<body>
+    <h1>Category Management</h1>
+    
+    <a href="/category/addCategory"><button>+ Add New Category</button></a>
+    <br><br>
+
+    <% if (categories && categories.length > 0) { %>
+        <table border="1" cellpadding="10" cellspacing="0">
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Category Name</th>
+                    <th>Description</th>
+                    <th>Action</th>
+                </tr>
+            </thead>
+            <tbody>
+                <% categories.forEach(function(cat) { %>
+                    <tr>
+                        <td><%= cat.category_id %></td>
+                        <td><%= cat.name %></td>
+                        <td><%= cat.description %></td>
+                        <td>
+                            <a href="/category/editCategory?categoryID=<%= cat.category_id %>">Edit</a> | 
+                            <a href="/category/deleteCategory?categoryID=<%= cat.category_id %>" onclick="return confirm('Delete this category?');">Delete</a>
+                        </td>
+                    </tr>
+                <% }) %>
+            </tbody>
+        </table>
+    <% } else { %>
+        <p>There are no categories yet.</p>
+    <% } %>
+
+    <br>
+    <a href="/">Back to Home</a> 
+    |
+    <a href="/song/allSong">Go to Songs</a>
+</body>
+</html>

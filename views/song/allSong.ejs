@@ -1,16 +1,23 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>All Songs</title>
 </head>
+
 <body>
 
     <h1>All Songs Library</h1>
+    <form action="/song/search" method="GET">
+        <label>Search by Song Name or Category:</label>
+        <input type="text" name="searchTerm"  placeholder="e.g., Pop, Thriller...">
+        <button type="submit">Search</button>
+    </form>
+    <br>
+    <% if (songs !=undefined && songs.length> 0) { %>
 
-    <% if (songs != undefined && songs.length > 0) { %>
-        
         <table border="1" cellpadding="10" cellspacing="0">
             <thead>
                 <tr>
@@ -22,32 +29,41 @@
                 </tr>
             </thead>
             <tbody>
-                
+
                 <% songs.forEach(function(song) { %>
                     <tr>
-                        <td><%= song.song_id %></td>
-                        <td><%= song.songname %></td>
-                        <td><%= song.artist %></td>
-                        <td><%= song.category %></td>
+                        <td>
+                            <%= song.song_id %>
+                        </td>
+                        <td>
+                            <%= song.songname %>
+                        </td>
+                        <td>
+                            <%= song.artist %>
+                        </td>
+                        <td>
+                            <%= song.category %>
+                        </td>
                         <td>
                             <a href="/song/songDetail?songID=<%= song.song_id %>">View Details</a>
                             <!-- <a href="../reviews/<%= //allReviews.song_id %>">Reviews</a>  change to button-->
                         </td>
                     </tr>
-                <% }) %>
+                    <% }) %>
 
             </tbody>
         </table>
         <br>
         <br>
-        <% if (userRole == "admin") {%>
-              <a href="/song/addSong">Add Song</a>
-        <%} %>
-    <% } else { %>
-        
-        <p>There are currently no songs in the database.</p>
-        
-    <% } %>
+        <% if (userRole=="admin" ) {%>
+            <a href="/song/addSong">Add Song</a>
+            <%} %>
+                <% } else { %>
+
+                    <p>There are currently no songs in the database.</p>
+
+                    <% } %>
 
 </body>
+
 </html>

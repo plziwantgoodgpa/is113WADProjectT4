@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Edit Category</title>
+</head>
+<body>
+    <h1>Edit Category: <%= category.name %></h1>
+    
+    <form action="/category/editCategory" method="POST">
+        <label>Category ID (Cannot be changed):</label><br>
+        <input type="number" name="category_id" value="<%= category.category_id %>" readonly><br><br>
+
+        <label>Category Name:</label><br>
+        <input type="text" name="name" value="<%= category.name %>" required><br><br>
+
+        <label>Description:</label><br>
+        <textarea name="description" required><%= category.description %></textarea><br><br>
+
+        <button type="submit">Update Category</button>
+    </form>
+    
+    <br>
+    <a href="/category/allCategories">Cancel / Go Back</a>
+</body>
+</html>

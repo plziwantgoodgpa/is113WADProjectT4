@@ -8,6 +8,8 @@ const server = express();
 const songRoutes = require("./routes/songRoutes");
 const reviewRoutes = require("./routes/reviewRoutes")
 const playlistRoutes = require("./routes/playlistRoutes");
+const homeRoutes = require("./routes/homeRoutes")
+const categoryRoutes = require("./routes/categoryRoutes")
 
 // Specify the path to the environment variablef file 'config.env'
 dotenv.config({ path: './config.env' });
@@ -15,10 +17,11 @@ server.use(express.urlencoded({ extended: true }));
 server.set("view engine", "ejs");
 
 //Routes
+server.use("/",homeRoutes)
 server.use("/song", songRoutes);
 server.use("/review", reviewRoutes)
 server.use("/playlist", playlistRoutes);
-
+server.use("/category", categoryRoutes);
 // async function to connect to DB
 async function connectDB() {
   try {
