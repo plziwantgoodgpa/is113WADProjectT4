@@ -6,8 +6,7 @@ const playlistSchema = new mongoose.Schema({
         required: [true, 'A playlist must have a user']
     },
     playList_id: {
-        type: Number,
-        required: [true, 'A playlist must have an id'],
+        type: String,
         unique: true
     },
     PlayListName: {
@@ -16,7 +15,6 @@ const playlistSchema = new mongoose.Schema({
     },
     date_created: {
         type: Date,
-        required: [true, 'A playlist must have a date_created'],
         default: Date.now // Automatically sets to the current date/time
     },
     songs: [
@@ -61,16 +59,23 @@ exports.findByPlaylistId = function(playList_id) {
     return Playlist.findOne({ playList_id: playList_id });
 };
 
-exports.addPlaylist = async (user_id, playlistData) => {
+exports.addPlaylist = async (user_id, playlistData ) => {
     try {
-        return await Playlist.create({
-            ...playlistData,        // spread the rest of the playlist data
-            user_id: user_id        // always force the user_id to the logged-in user
+        const playlist = await Playlist.create({
+            ...playlistData, //spreads data
+            user_id: user_id
         });
+
+        playlist.playList_id = playlist._id.toString();
+        await playlist.save();
+
+        return playlist;
     } catch (error) {
+        console.error(error);
         return null;
     }
-}
+};
+
 
 exports.deletePlaylist = async (playList_id, user_id) => {
     try {
@@ -82,3 +87,16 @@ exports.deletePlaylist = async (playList_id, user_id) => {
         return null;
     }
 }
+
+exports.addSongToPlaylist = async (playList_id, user_id, song_id) => {
+    try {
+        return await Playlist.findOneAndUpdate(
+            { playList_id: playList_id, user_id: user_id },
+            { $push: { songs: { song_id: song_id } } },
+            { new: true }
+        );
+    } catch (error) {
+        console.error(error);
+        return null;
+    }
+};

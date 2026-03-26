@@ -8,6 +8,8 @@
     <a href="/playlist">Back</a>
     <h1><%= playlist.PlayListName %></h1>
     
+    <a href="/playlist/<%= playlist.playList_id %>/addsong">+ Add Song</a>  
+
     <h2>Songs</h2>
     <% if (playlist.songs.length === 0) { %>
         <p>No songs yet.</p>

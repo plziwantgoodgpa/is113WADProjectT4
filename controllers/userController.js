@@ -41,9 +41,7 @@ exports.loginPost = async (req, res) =>{
                 username: user.username,
                 role: user.user_role
             }
-            if(user.user_role=='user'){
-                res.redirect('/')
-            }
+           res.redirect('/')
         } else {
             res.redirect('/user/login')
         }

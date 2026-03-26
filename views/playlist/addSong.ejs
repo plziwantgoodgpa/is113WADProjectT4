@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Add Song to <%= playlist.PlayListName %></title>
+</head>
+<body>
+
+<h1>Add Song to "<%= playlist.PlayListName %>"</h1>
+
+<% if (songs.length === 0) { %>
+    <p>No songs available.</p>
+<% } else { %>
+    <table>
+        <tr>
+            <th>Song</th>
+            <th>Artist</th>
+            <th>Category</th>
+            <th>Action</th>
+        </tr>
+        <% songs.forEach(song => { %>
+            <tr>
+                <td><%= song.songname %></td>
+                <td><%= song.artist %></td>
+                <td><%= song.category %></td>
+                <td>
+                    <a href="/playlist/<%= playlist.playList_id %>/addsong/<%= song.song_id %>">
+                        + Add
+                    </a>
+                </td>
+            </tr>
+        <% }) %>
+    </table>
+<% } %>
+
+<br>
+<a href="/playlist/<%= playlist.playList_id %>">Back to Playlist</a>
+
+</body>
+</html>
