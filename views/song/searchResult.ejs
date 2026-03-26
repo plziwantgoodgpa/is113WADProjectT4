@@ -1,48 +1,83 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
-    <title>Search Songs</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Search Results</title>
+    <link rel="stylesheet" href="/css/style.css">
+    <link rel="stylesheet" href="/css/songTable.css">
 </head>
+
 <body>
-    <h1>Search the Song Library</h1>
 
-   
-    
-    <br>
-    <a href="/song/allSong">Clear Search / View All Songs</a>
-    <hr>
+    <nav class="navbar">
+        <a href="/" class="nav-brand">🎵 BeatVault</a>
+        <div class="nav-links">
+            <a href="/">Home</a>
+            <a href="/song/allsong" style="color: #ffffff;">Songs</a>
+        </div>
+    </nav>
 
-    <h2>Results <%= searchTerm ? 'for "' + searchTerm + '"' : '' %></h2>
+    <div class="container">
+        <div class="page-header">
+            <h1>Search the Song Library</h1>
+            <a href="/song/allSong" class="btn btn-outline">Clear Search / View All</a>
+        </div>
 
-    <% if (songs && songs.length > 0) { %>
-        <table border="1" cellpadding="10" cellspacing="0">
-            <thead>
-                <tr>
-                    <th>ID</th>
-                    <th>Song Name</th>
-                    <th>Artist</th>
-                    <th>Category</th>
-                    <th>Action</th>
-                </tr>
-            </thead>
-            <tbody>
-                <% songs.forEach(function(song) { %>
+        <div class="search-container">
+            <form action="/song/search" method="GET" class="search-form">
+                <input type="text" name="searchTerm" value="<%= searchTerm || '' %>"
+                    placeholder="Search by Song Name or Category...">
+                <button type="submit" class="btn">Search</button>
+            </form>
+        </div>
+
+        <h2>Results <%= searchTerm ? 'for "' + searchTerm + '"' : '' %>
+        </h2>
+
+        <% if (songs && songs.length> 0) { %>
+            <table class="song-table">
+                <thead>
                     <tr>
-                        <td><%= song.song_id %></td>
-                        <td><%= song.songname %></td>
-                        <td><%= song.artist %></td>
-                        <td><%= song.category %></td>
-                        <td>
-                            <a href="/song/songDetail?songID=<%= song.song_id %>">View Details</a> 
-                        </td>
+                        <th>ID</th>
+                        <th>Song Name</th>
+                        <th>Artist</th>
+                        <th>Category</th>
+                        <th>Action</th>
                     </tr>
-                <% }) %>
-            </tbody>
-        </table>
-    <% } else { %>
-        <p>No songs found matching your search. Try another word!</p>
-    <% } %>
+                </thead>
+                <tbody>
+                    <% songs.forEach(function(song) { %>
+                        <tr>
+                            <td>
+                                <%= song.song_id %>
+                            </td>
+                            <td><strong>
+                                    <%= song.songname %>
+                                </strong></td>
+                            <td>
+                                <%= song.artist %>
+                            </td>
+                            <td><span class="category-badge">
+                                    <%= song.category %>
+                                </span></td>
+                            <td>
+                                <a href="/song/songDetail?songID=<%= song.song_id %>"
+                                    class="btn btn-outline btn-small">View Details</a>
+                            </td>
+                        </tr>
+                        <% }) %>
+                </tbody>
+            </table>
+            <% } else { %>
+                <div class="empty-state">
+                    <p>No songs found matching <strong>"<%= searchTerm %>"</strong>. Try another word!</p>
+                </div>
+                <% } %>
+
+    </div>
 
 </body>
+
 </html>

@@ -3,7 +3,7 @@ const Category = require('../model/categoryModel');
 exports.getAllCategories = async (req, res) => {
     try {
         const categories = await Category.retrieveAll();
-        res.render("category/allCategories", { categories }); 
+        res.render("category/allCategory", { categories }); 
     } catch (error) {
         console.error(error);
         res.status(500).send("Error reading categories from database");

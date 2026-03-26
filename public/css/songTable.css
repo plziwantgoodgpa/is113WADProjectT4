@@ -1,0 +1,49 @@
+/* --- SONG TABLE --- */
+.song-table {
+    width: 100%;
+    border-collapse: collapse;
+    background-color: #1e1e1e;
+    border-radius: 8px;
+    overflow: hidden; /* Keeps the rounded corners on the table */
+}
+
+.song-table th, .song-table td {
+    padding: 15px;
+    text-align: left;
+    border-bottom: 1px solid #333;
+}
+
+.song-table th {
+    background-color: #2a2a2a;
+    color: #b3b3b3;
+    font-weight: bold;
+    text-transform: uppercase;
+    font-size: 14px;
+    letter-spacing: 1px;
+}
+
+.song-table tr:hover {
+    background-color: #2a2a2a; /* Highlights the row when mouse hovers over it */
+}
+
+/* --- SMALL EXTRAS --- */
+.category-badge {
+    background-color: #333;
+    padding: 5px 10px;
+    border-radius: 12px;
+    font-size: 14px;
+    color: #1db954;
+}
+
+.btn-small {
+    padding: 6px 12px;
+    font-size: 14px;
+}
+
+.empty-state {
+    text-align: center;
+    padding: 50px;
+    background-color: #1e1e1e;
+    border-radius: 8px;
+    color: #b3b3b3;
+}

@@ -71,7 +71,7 @@ exports.songDetail = async function (req, res) {
     }
 
     let userReview = null;
-    console.log(username)
+    console.log("user is " + username)
     if (username) {
         userReview = await ReviewModel.findOneReview(songID, username);
     }
@@ -110,7 +110,7 @@ exports.showAddSongForm = (req, res) => {
 // --- ADD SONG CONTROLLER ---
 exports.insertSong = async (req, res) => {
     let song = req.body
-    console.log(song)
+    console.log("song to be inserted "+song)
     try {
         // req.body contains all the data typed into your HTML form
         await SongModel.addSong(song);
@@ -187,8 +187,8 @@ exports.searchSongs = async (req, res) => {
         if (searchTerm) {
             songs = await SongModel.searchSongs(searchTerm);
         }
-        console.log(songs)
-        console.log(searchTerm)
+        // console.log("search result for "+songs)
+        // console.log("This is the searchTerm for song "+searchTerm)
         // Send BOTH the songs array and the search term back to the page
         res.render("song/searchResult", { songs: songs, searchTerm: searchTerm });
 

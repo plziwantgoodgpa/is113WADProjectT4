@@ -3,111 +3,143 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Song Details</title>
+    <title>Song Details | BeatVault</title>
+    <link rel="stylesheet" href="/css/style.css">
+    <link rel="stylesheet" href="/css/songDetailPage.css">
+    <link rel="stylesheet" href="/css/songTable.css">
 </head>
 <body>
 
-    <h1>Song Details</h1>
+    <nav class="navbar">
+        <a href="/" class="nav-brand">🎵 BeatVault</a>
+        <div class="nav-links">
+            <a href="/">Home</a>
+            <a href="/song/allsong" style="color: #ffffff;">Songs</a>
+        </div>
+    </nav>
 
-    <% if (song != undefined && song != "Not Found") { %>
+    <div class="container">
         
-        <table border="1" cellpadding="10" cellspacing="0">
-            <tr>
-                <th>Song ID</th>
-                <td><%= song.song_id %></td>
-            </tr>
-            <tr>
-                <th>Song Name</th>
-                <td><%= song.songname %></td>
-            </tr>
-            <tr>
-                <th>Artist</th>
-                <td><%= song.artist %></td>
-            </tr>
-            <tr>
-                <th>Category</th>
-                <td><%= song.category %></td>
-            </tr>
-            <tr>
-                <th>Description</th>
-                <td><%= song.description %></td>
-            </tr>
-            <tr>
-                <th>Average Rating</th>
-                <td>
-                    <% if (averageRating > 0) { %>
-                        <%= averageRating.toFixed(1) %> / 5
+        <div class="page-header">
+            <h1>Song Details</h1>
+            <a href="/song/allSong" class="btn btn-outline">← Back to Library</a>
+        </div>
+
+        <% if (song != undefined && song != "Not Found") { %>
+            
+            <div class="content-box">
+                <table class="info-table">
+                    <tr>
+                        <th>Song ID</th>
+                        <td><%= song.song_id %></td>
+                    </tr>
+                    <tr>
+                        <th>Song Name</th>
+                        <td><strong style="font-size: 1.2em;"><%= song.songname %></strong></td>
+                    </tr>
+                    <tr>
+                        <th>Artist</th>
+                        <td><%= song.artist %></td>
+                    </tr>
+                    <tr>
+                        <th>Category</th>
+                        <td><span class="category-badge"><%= song.category %></span></td>
+                    </tr>
+                    <tr>
+                        <th>Description</th>
+                        <td><%= song.description %></td>
+                    </tr>
+                    <tr>
+                        <th>Average Rating</th>
+                        <td>
+                            <span class="rating-badge">
+                                <% if (averageRating > 0) { %>
+                                    ⭐ <%= averageRating.toFixed(1) %> / 5
+                                <% } else { %>
+                                    No ratings yet
+                                <% } %>
+                            </span>
+                        </td>
+                    </tr>
+                </table>
+                
+                <% if (typeof userRole !== 'undefined' && userRole == "admin") { %>
+                    <div class="admin-controls" style="margin-top: 20px; padding-top: 20px; border-top: 1px solid #333;">
+                        <a href="/song/editSong?songID=<%= song.song_id %>" class="btn btn-outline">Edit Song</a>
+                        <a href="/song/deleteSong?songID=<%= song.song_id %>" class="btn" style="background-color: #e74c3c;" onclick="return confirm('Delete this song?');">Delete Song</a>
+                    </div>
+                <% } %>
+            </div>
+
+            <hr class="divider">
+
+            <div class="reviews-section">
+                <h2>Reviews</h2>
+
+                <% if (error) { %>
+                    <div class="error-box"><strong>Error:</strong> <%= error %></div>
+                <% } %>
+
+                <% if (username) { %>
+                    <% if (userReview) { %>
+                        <div class="review-card user-review-card">
+                            <span class="badge">Your Review</span>
+                            <div class="review-rating">⭐ <%= userReview.rating %> / 5</div>
+                            <p class="review-text">"<%= userReview.reviewMessage %>"</p>
+                        </div>
                     <% } else { %>
-                        No ratings yet
+                        <div class="review-form-box content-box">
+                            <h3>Leave a Review</h3>
+                            <form action="/review/add-review" method="POST" class="custom-form">
+                                <input type="hidden" name="song_id" value="<%= song.song_id %>">
+                                
+                                <div class="form-group">
+                                    <label>Rating (1 to 5):</label>
+                                    <input type="number" name="rating" min="1" max="5" value="<%= formData.rating %>" required>
+                                </div>
+                                
+                                <div class="form-group">
+                                    <label>Your Review:</label>
+                                    <textarea name="reviewMessage" rows="4" required><%= formData.reviewMessage %></textarea>
+                                </div>
+                                
+                                <button type="submit" class="btn">Submit Review</button>
+                            </form>
+                        </div>
                     <% } %>
-                </td>
-            </tr>
-        </table>
-        
-        <br>
-        
-        <% if (typeof userRole !== 'undefined' && userRole == "admin") { %>
-              <a href="/song/editSong?songID=<%= song.song_id %>">Edit Song</a> |
-              <a href="/song/deleteSong?songID=<%= song.song_id %>" onclick="return confirm('Delete this song?');">Delete Song</a>
-        <% } %>
+                <% } else { %>
+                    <div class="login-prompt">
+                        <p><em>Please <a href="/user/login" style="color: #1db954;">log in</a> to leave a review.</em></p>
+                    </div>
+                <% } %>
 
-        <hr>
-
-        <h2>Reviews</h2>
-
-        <% if (error) { %>
-            <p style="color: red;"><strong>Error:</strong> <%= error %></p>
-        <% } %>
-
-        <% if (username) { %>
-            <% if (userReview) { %>
-                <div style="background-color: #f0f0f0; padding: 10px; margin-bottom: 20px;">
-                    <strong>You already reviewed this song:</strong><br>
-                    Rating: <%= userReview.rating %> / 5 <br>
-                    "<%= userReview.reviewMessage %>"
+                <div class="review-list">
+                    <% if (reviews && reviews.length > 0) { %>
+                        <% reviews.forEach(function(review) { %>
+                            <div class="review-card">
+                                <div class="review-rating">⭐ <%= review.rating %> / 5</div>
+                                <p class="review-text"><%= review.reviewMessage %></p>
+                            </div>
+                        <% }) %>
+                    <% } else { %>
+                        <div class="empty-state">
+                            <p>There are no reviews for this song yet. Be the first!</p>
+                        </div>
+                    <% } %>
                 </div>
-            <% } else { %>
-                <h3>Leave a Review</h3>
-                <form action="/review/add-review" method="POST">
-                    <input type="hidden" name="song_id" value="<%= song.song_id %>">
-                    
-                    <label>Rating (1 to 5):</label><br>
-                    <input type="number" name="rating" min="1" max="5" value="<%= formData.rating %>" required><br><br>
-                    
-                    <label>Your Review:</label><br>
-                    <textarea name="reviewMessage" required><%= formData.reviewMessage %></textarea><br><br>
-                    
-                    <button type="submit">Submit Review</button>
-                </form>
-                <br>
-            <% } %>
+            </div>
+
         <% } else { %>
-            <p><em>Please <a href="/user/login">log in</a> to leave a review.</em></p>
+            <div class="empty-state">
+                <p><strong>Sorry!</strong> We couldn't find a song with that ID in our database.</p>
+                <a href="/song/allSong" class="btn mt-3">Back to Library</a>
+            </div>
         <% } %>
 
-        <% if (reviews && reviews.length > 0) { %>
-            <ul>
-                <% reviews.forEach(function(review) { %>
-                    <li style="margin-bottom: 10px;">
-                        <strong>Rating: <%= review.rating %> / 5</strong><br>
-                        <%= review.reviewMessage %>
-                    </li>
-                <% }) %>
-            </ul>
-        <% } else { %>
-            <p>There are no reviews for this song yet. Be the first!</p>
-        <% } %>
-
-    <% } else { %>
-        <p><strong>Sorry!</strong> We couldn't find a song with that ID in our database.</p>
-    <% } %>
-
-    <br><br>
-    <a href="/song/allSong">Go Back to All Songs</a>
+    </div>
 
 </body>
 </html>
-
 
 
 
