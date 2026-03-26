@@ -18,4 +18,4 @@ router.get('/editCategory', categoryController.showEditForm);        // Processe
 // DELETE SONG
 router.get('/deleteCategory', categoryController.deleteCategory);       // Deletes the song and redirects
 
-module.exports = router;
+module.exports = router; 

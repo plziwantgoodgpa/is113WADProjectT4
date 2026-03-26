@@ -5,6 +5,6 @@
     <% if (user == "Not logged in") { %>
         <a href="/user/login">Log in</a>
    <% }else{ %>
-    <a href="/profile?<%= user.username %>">Profile</a>
+    <a href="/user/profile?<%= user.username %>">Profile</a>
     <% } %>
 </nav>

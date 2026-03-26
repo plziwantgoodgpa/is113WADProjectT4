@@ -29,7 +29,7 @@ const songSchema = new mongoose.Schema({
 });
 
 // Fixed: This was previously pointing to 'reviewSchema'
-const Song = mongoose.model('Song', songSchema, 'Song'); 
+const Song = mongoose.models.Song || mongoose.model('Song', songSchema, 'Song');
 
 // Methods
 exports.retrieveAll = function() {

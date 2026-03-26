@@ -6,7 +6,7 @@ const songController = require('../controllers/songController');
 
 // When a GET request hits '/api/songs', run the getAllSongs function
 router.get('/allSong', songController.getAllSongs);
-router.get('/songDetail', songController.getSongBySongID);
+router.get('/songDetail', songController.songDetail);
 // ADD SONG
 router.get('/addSong', songController.showAddSongForm); // Shows the blank form
 router.post('/addSong', songController.insertSong);       // Processes the form submission
@@ -28,8 +28,8 @@ router.get('/search', songController.searchSongs);
 
 
 
-router.get("/allSongs", songController.retrieveAllSongs);
-router.get("/songDetail", songController.songDetail);
+// router.get("/allSongs", songController.retrieveAllSongs);
+// router.get("/songDetail", songController.songDetail);
 
 
 //

@@ -5,15 +5,21 @@ exports.addReview = async function(req, res) {
     const song_id = parseInt(req.body.song_id);
     const rawReviewMessage = req.body.reviewMessage;
     const rating = parseInt(req.body.rating);
-
     let reviewMessage = "";
     let errors = [];
 
+    let user_role = undefined
+    let username = undefined
+    console.log(req.session.user)
+    if (req.session.user != undefined) {
+        user_role = req.session.user.role
+        username = req.session.user.username
+    }
     if (rawReviewMessage !== undefined) {
         reviewMessage = rawReviewMessage.trim();
     }
 
-    if (!req.session.user_id) {
+    if (username==undefined) {
         errors.push("Please log in before adding a review.");
     }
 
@@ -32,6 +38,7 @@ exports.addReview = async function(req, res) {
         return res.render('song/songDetail', {
             song: song,
             reviews: reviews,
+            user_role: user_role,
             userReview: null,
             averageRating: calculateAverageRating(reviews),
             error: errors.join("<br>"),
@@ -39,18 +46,18 @@ exports.addReview = async function(req, res) {
                 rating: req.body.rating,
                 reviewMessage: reviewMessage
             },
-            user_id: req.session.user_id || null
+            username: username
         });
     }
 
-    const existingReview = await reviewModel.findOneReview(song_id, req.session.user_id);
+    const existingReview = await reviewModel.findOneReview(song_id, username);
 
     if (existingReview) {
         return res.redirect('/song/songDetail?songID=' + song_id);
     }
 
     await reviewModel.addReview({
-        user_id: req.session.user_id,
+        username: username,
         song_id: song_id,
         rating: rating,
         reviewMessage: reviewMessage

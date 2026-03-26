@@ -1,9 +1,9 @@
 const mongoose = require('mongoose');
 
 const reviewSchema = new mongoose.Schema({
-    user_id: {
+    username: {
         type: String,
-        required: [true, 'A review must have a user_id']
+        required: [true, 'A review must have a username']
     },
     song_id: {
         type: Number,
@@ -36,21 +36,21 @@ exports.findBySongId = function(song_id) {
     return Review.find({ song_id: song_id });
 };
 
-exports.findOneReview = function(song_id, user_id) {
-    return Review.findOne({ song_id: song_id, user_id: user_id });
+exports.findOneReview = function(song_id, username) {
+    return Review.findOne({ song_id: song_id, username: username });
 };
 // creating a new review 
 exports.addReview = function(reviewData) {
     return Review.create(reviewData);
 };
 
-exports.editReview = function(song_id, user_id, updatedData) {
+exports.editReview = function(song_id, username, updatedData) {
     return Review.updateOne(
-        { song_id: song_id, user_id: user_id },
+        { song_id: song_id, username: username },
         updatedData
     );
 };
 
-exports.deleteReview = function(song_id, user_id) {
-    return Review.deleteOne({ song_id: song_id, user_id: user_id });
+exports.deleteReview = function(song_id, username) {
+    return Review.deleteOne({ song_id: song_id, username: username });
 };

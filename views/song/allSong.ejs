@@ -10,6 +10,7 @@
 <body>
 
     <h1>All Songs Library</h1>
+    <nav><a href="/">home</a></nav>
     <form action="/song/search" method="GET">
         <label>Search by Song Name or Category:</label>
         <input type="text" name="searchTerm"  placeholder="e.g., Pop, Thriller...">
@@ -55,7 +56,7 @@
         </table>
         <br>
         <br>
-        <% if (userRole=="admin" ) {%>
+        <% if (user_role=="admin" ) {%>
             <a href="/song/addSong">Add Song</a>
             <%} %>
                 <% } else { %>
