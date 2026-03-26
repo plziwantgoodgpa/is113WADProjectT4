@@ -1,70 +1,68 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>All Songs</title>
+    <link rel="stylesheet" href="/css/style.css">
 </head>
-
 <body>
 
-    <h1>All Songs Library</h1>
-    <nav><a href="/">home</a></nav>
-    <form action="/song/search" method="GET">
-        <label>Search by Song Name or Category:</label>
-        <input type="text" name="searchTerm"  placeholder="e.g., Pop, Thriller...">
-        <button type="submit">Search</button>
-    </form>
-    <br>
-    <% if (songs !=undefined && songs.length> 0) { %>
+    <nav class="navbar">
+        <a href="/" class="nav-brand">🎵 BeatVault</a>
+        <div class="nav-links">
+            <a href="/">Home</a>
+            <a href="/song/allsong" style="color: #ffffff;">Songs</a>
+        </div>
+    </nav>
 
-        <table border="1" cellpadding="10" cellspacing="0">
-            <thead>
-                <tr>
-                    <th>ID</th>
-                    <th>Song Name</th>
-                    <th>Artist</th>
-                    <th>Category</th>
-                    <th>Action</th>
-                </tr>
-            </thead>
-            <tbody>
+    <div class="container">
+        <div class="page-header">
+            <h1>All Songs Library</h1>
+            
+            <% if (typeof user_role !== 'undefined' && user_role == "admin") { %>
+                <a href="/song/addSong" class="btn">+ Add New Song</a>
+            <% } %>
+        </div>
 
-                <% songs.forEach(function(song) { %>
+        <div class="search-container">
+            <form action="/song/search" method="GET" class="search-form">
+                <input type="text" name="searchTerm" placeholder="Search by Song Name or Category (e.g., Pop, Thriller...)">
+                <button type="submit" class="btn">Search</button>
+            </form>
+        </div>
+
+        <% if (songs != undefined && songs.length > 0) { %>
+            <table class="song-table">
+                <thead>
                     <tr>
-                        <td>
-                            <%= song.song_id %>
-                        </td>
-                        <td>
-                            <%= song.songname %>
-                        </td>
-                        <td>
-                            <%= song.artist %>
-                        </td>
-                        <td>
-                            <%= song.category %>
-                        </td>
-                        <td>
-                            <a href="/song/songDetail?songID=<%= song.song_id %>">View Details</a>
-                            <!-- <a href="../reviews/<%= //allReviews.song_id %>">Reviews</a>  change to button-->
-                        </td>
+                        <th>ID</th>
+                        <th>Song Name</th>
+                        <th>Artist</th>
+                        <th>Category</th>
+                        <th>Action</th>
                     </tr>
+                </thead>
+                <tbody>
+                    <% songs.forEach(function(song) { %>
+                        <tr>
+                            <td><%= song.song_id %></td>
+                            <td><strong><%= song.songname %></strong></td>
+                            <td><%= song.artist %></td>
+                            <td><span class="category-badge"><%= song.category %></span></td>
+                            <td>
+                                <a href="/song/songDetail?songID=<%= song.song_id %>" class="btn btn-outline btn-small">View Details</a>
+                            </td>
+                        </tr>
                     <% }) %>
-
-            </tbody>
-        </table>
-        <br>
-        <br>
-        <% if (user_role=="admin" ) {%>
-            <a href="/song/addSong">Add Song</a>
-            <%} %>
-                <% } else { %>
-
-                    <p>There are currently no songs in the database.</p>
-
-                    <% } %>
+                </tbody>
+            </table>
+        <% } else { %>
+            <div class="empty-state">
+                <p>There are currently no songs in the database. Try adjusting your search or add a new song!</p>
+            </div>
+        <% } %>
+    </div>
 
 </body>
-
 </html>

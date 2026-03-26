@@ -21,7 +21,7 @@ server.use(session({
     resave: false,
     saveUninitialized: false
 }))
-
+server.use(express.static('public'));
 //Routes
 server.use("/",homeRoutes)
 server.use("/song", songRoutes);
