@@ -1,0 +1,61 @@
+/* ========================================= */
+/* ADD / EDIT SONG FORM STYLES               */
+/* ========================================= */
+
+.form-container {
+    max-width: 600px; 
+    margin: 0 auto;
+    background-color: #1e1e1e;
+    padding: 30px;
+    border-radius: 8px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.5);
+}
+
+.custom-form .form-group {
+    margin-bottom: 20px;
+}
+
+.custom-form label {
+    display: block;
+    margin-bottom: 8px;
+    color: #b3b3b3;
+    font-weight: 500;
+}
+
+/* Styles inputs, textareas, AND the new select dropdown all at once */
+.custom-form input[type="text"],
+.custom-form input[type="number"],
+.custom-form textarea,
+.custom-form select {
+    width: 100%;
+    padding: 12px 15px;
+    background-color: #2a2a2a;
+    border: 1px solid #333;
+    border-radius: 4px;
+    color: white;
+    font-family: inherit;
+    font-size: 16px;
+    box-sizing: border-box; /* Prevents padding from stretching the box out of bounds */
+    transition: border-color 0.3s ease;
+}
+
+/* The glowing green effect when you click on a box */
+.custom-form input:focus,
+.custom-form textarea:focus,
+.custom-form select:focus {
+    outline: none;
+    border-color: #1db954;
+}
+
+/* Style for disabled placeholder option in dropdown */
+.custom-form select option[disabled] {
+    color: #888;
+}
+
+/* Big save button specifically for forms */
+.custom-form .btn-submit {
+    width: 100%;
+    font-size: 16px;
+    padding: 15px;
+    margin-top: 10px;
+}

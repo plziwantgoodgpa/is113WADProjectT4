@@ -1,7 +1,7 @@
 // 1. Import the Song model
 const SongModel = require('../model/songModel');
 const ReviewModel = require('../model/reviewModel');
-
+const CategoryModel = require('../model/categoryModel')
 // 2. Create and export the "Retrieve All" function
 exports.getAllSongs = async (req, res) => {
     let user_role = undefined
@@ -102,22 +102,60 @@ exports.songDetail = async function (req, res) {
 
 
 // --- ADD SONG ---
-exports.showAddSongForm = (req, res) => {
-    res.render("song/addSong"); // Renders the blank form
+exports.showAddSongForm = async (req, res) => {
+    let user_role = undefined;
+    let username = undefined;
+
+    if (req.session.user != undefined) {
+        user_role = req.session.user.role;
+        username = req.session.user.username;
+    }
+
+    // SECURITY CHECK: Kick out anyone who isn't an admin
+    if (user_role !== "admin") {
+        // This sends a popup alert to the browser, then redirects them to the library
+        return res.send('<script>alert("Access Denied: You do not have permission to view this page."); window.location.href="/song/allSong";</script>');
+    }
+
+    // Only admins will get past the code above!
+    let categories = await CategoryModel.retrieveAll();
+
+    res.render("song/addSong", {
+        user_role: user_role,
+        categories: categories
+    });
 };
 
 
 // --- ADD SONG CONTROLLER ---
 exports.insertSong = async (req, res) => {
-    let song = req.body
-    console.log("song to be inserted "+song)
     try {
-        // req.body contains all the data typed into your HTML form
-        await SongModel.addSong(song);
+        // 1. Extract all the pieces from the submitted form
+        const { songname, artist, categoryData, description } = req.body;
+
+        // 2. Split the "ID|Name" string into two separate variables
+        const [category_id, category_name] = categoryData.split('|');
+
+        // 3. Construct a clean song object perfectly formatted for your database
+        const newSong = {
+            songname: songname,
+            artist: artist,
+            category_id: category_id, // Storing the ID for database relationships
+            category: category_name,  // Storing the Name for easy displaying
+            description: description
+        };
+
+        console.log("Song to be inserted: ", newSong);
+
+        // 4. Send the clean object to your model to be saved
+        await SongModel.addSong(newSong);
+
+        // 5. Redirect the user back to the library so they can see their new song!
         res.redirect("/song/allSong");
+
     } catch (error) {
-        console.error(error);
-        res.send("Error saving the new song. Make sure the ID is unique!");
+        console.error("Error inserting song:", error);
+        res.send("Error saving the new song. Please make sure all fields are filled out correctly!");
     }
 };
 
@@ -201,14 +239,4 @@ exports.searchSongs = async (req, res) => {
 
 // -- ADDED THIS SECTION FOR REVIEWS!!! TRIALLL ----//////
 
-// const songModel = require('../model/songModel');
-
-// exports.retrieveAllSongs = async function(req, res) {
-//     const songs = await songModel.retrieveAll();
-
-//     res.render('song/allSong', {
-//         songs: songs,
-//         userRole: req.session.userRole
-//     });
-// };
 

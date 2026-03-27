@@ -46,7 +46,7 @@ exports.addSong = async function(songData) {
     // .sort({ song_id: -1 }) sorts them in descending order (highest to lowest)
     // .findOne() just grabs the very first one on that list
     const lastSong = await Song.findOne().sort({ song_id: -1 });
-
+    
     // 2. Figure out the next ID
     let nextId = 1; // Default to 1 if the database is completely empty
     if (lastSong && lastSong.song_id) {
@@ -55,7 +55,7 @@ exports.addSong = async function(songData) {
 
     // 3. Inject this new ID into the data that came from the HTML form
     songData.song_id = nextId;
-
+    songData.category_id = 11
     // 4. Create and save the new song!
     const newSong = new Song(songData);
     return newSong.save(); 

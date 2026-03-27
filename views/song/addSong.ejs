@@ -1,29 +1,73 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
-    <title>Add New Song</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Add New Song | BeatVault</title>
+
+    <link rel="stylesheet" href="/css/style.css">
+    <link rel="stylesheet" href="/css/songDetailPage.css">
+    <link rel="stylesheet" href="/css/songTable.css">
+    <link rel="stylesheet" href="/css/songForm.css">
 </head>
+
 <body>
-    <h1>Add a New Song</h1>
-    
-    <form action="/song/addSong" method="POST">
-        <label>Song Name:</label><br>
-        <input type="text" name="songname" required><br><br>
 
-        <label>Artist:</label><br>
-        <input type="text" name="artist" required><br><br>
+    <nav class="navbar">
+        <a href="/" class="nav-brand">🎵 BeatVault</a>
+        <div class="nav-links">
+            <a href="/">Home</a>
+            <a href="/song/allsong" style="color: #ffffff;">Songs</a>
+        </div>
+    </nav>
 
-        <label>Category:</label><br>
-        <input type="text" name="category" required><br><br>
+    <div class="container">
 
-        <label>Description:</label><br>
-        <textarea name="description" required></textarea><br><br>
+        <div class="page-header">
+            <h1>Add a New Song</h1>
+            <a href="/song/allSong" class="btn btn-outline">← Cancel</a>
+        </div>
 
-        <button type="submit">Save Song</button>
-    </form>
-    
-    <br>
-    <a href="/song/allSong">Cancel / Go Back</a>
+        <div class="form-container">
+            <form action="/song/addSong" method="POST" class="custom-form">
+
+                <div class="form-group">
+                    <label>Song Name:</label>
+                    <input type="text" name="songname" placeholder="e.g., Blinding Lights" required>
+                </div>
+
+                <div class="form-group">
+                    <label>Artist:</label>
+                    <input type="text" name="artist" placeholder="e.g., The Weeknd" required>
+                </div>
+
+                <div class="form-group">
+                    <label>Category:</label>
+                    <select name="categoryData" required>
+                        <option value="" disabled selected>Select a Category...</option>
+
+                        <% categories.forEach(function(cat) { %>
+                            <option value="<%= cat.category_id %>|<%= cat.name %>">
+                                <%= cat.name %>
+                            </option>
+                            <% }) %>
+
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label>Description:</label>
+                    <textarea name="description" rows="5" placeholder="Add some details about the song..."
+                        required></textarea>
+                </div>
+
+                <button type="submit" class="btn btn-submit">Save Song to Database</button>
+            </form>
+        </div>
+
+    </div>
+
 </body>
+
 </html>
