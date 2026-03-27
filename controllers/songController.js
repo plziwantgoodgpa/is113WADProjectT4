@@ -14,6 +14,22 @@ exports.getAllSongs = async (req, res) => {
         // THE FORMULA: .find() with no arguments returns everything in the collection
         let songs = await SongModel.retrieveAll();
         console.log(songs)
+        for (i = 0; i < songs.length; i++) {
+            let currentSong = songs[i]
+            let reviews = await ReviewModel.findBySongId(currentSong.song_id);
+            let averageRating =0
+            if (reviews.length > 0) {
+                let total = 0;
+                for (let review of reviews) {
+                    total += review.rating;
+                }
+                averageRating = total / reviews.length;
+            }
+            else {
+                averageRating = "No ratings yet"
+            }
+            songs[i].averageRating = averageRating
+        }
         // Send a successful response back to the client
         res.render("song/allSong", { songs, user_role, username })
 
