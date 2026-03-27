@@ -66,3 +66,4 @@ exports.editCategory = function(category_id, updatedData) {
 exports.deleteCategory = function(category_id) {
     return Category.findOneAndDelete({ category_id: category_id });
 };
+

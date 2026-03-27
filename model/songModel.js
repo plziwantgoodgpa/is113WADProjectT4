@@ -30,7 +30,7 @@ const songSchema = new mongoose.Schema({
 
 // Fixed: This was previously pointing to 'reviewSchema'
 const Song = mongoose.models.Song || mongoose.model('Song', songSchema, 'Song');
-
+const Category = mongoose.models.Category
 // Methods
 exports.retrieveAll = function() {
     return Song.find();
@@ -90,4 +90,18 @@ exports.searchSongs = function(searchTerm) {
             { category: { $regex: searchTerm, $options: 'i' } }
         ]
     });
+};
+
+exports.findSongsByCat = async (categoryID) => {
+    try {
+        // Assuming your exported Mongoose model is called 'Song'
+        // This tells MongoDB: "Find every song where the category_id equals this number"
+        const filteredSongs = await Song.find({ category_id: categoryID });
+        
+        return filteredSongs;
+
+    } catch (error) {
+        console.error("MongoDB Error in findSongsByCategory:", error);
+        throw error; // Tosses the error back to the controller so your app doesn't crash
+    }
 };

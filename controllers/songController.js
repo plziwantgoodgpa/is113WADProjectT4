@@ -15,7 +15,7 @@ exports.getAllSongs = async (req, res) => {
         let songs = await SongModel.retrieveAll();
         console.log(songs)
         // Send a successful response back to the client
-        res.render("song/allSong", { songs, user_role })
+        res.render("song/allSong", { songs, user_role , username})
 
     } catch (error) {
         // If something goes wrong (e.g., database is down), catch the error
@@ -23,39 +23,6 @@ exports.getAllSongs = async (req, res) => {
         res.send("Error reading database show songs")
     }
 };
-
-// exports.getSongBySongID = async (req, res) => {
-//     let songID = req.query.songID
-//     console.log(`This is song_id ${songID}`)
-
-//     // 1. If the user didn't provide an ID in the URL, redirect them away safely
-//     if (!songID || songID === "") {
-//         // console.log(`This is song_id ${songID}`)
-//         // return res.redirect("/song/allsong"); 
-//     }
-
-//     try {
-//         // 2. Fetch the song using the correct model and method
-//         // Using the findBySongId method we defined earlier
-//         let song = await SongModel.findBySongId(songID); 
-//         console.log(song)
-//         // 3. Handle the case where the ID is valid, but the song doesn't exist
-//         if (!song) {
-//             console.log("Did not find a song with ID:", songID);
-//             // Render the page but pass null so your EJS knows to show a "Not Found" message
-//             return res.render("song/songDetail", { song: "Not Found" ,userRole:userRole}); 
-//         }
-
-//         // 4. Success!
-//         console.log("This is the Song I found: " + song.songname);
-//         res.render("song/songDetail", { song: song ,userRole:userRole}); 
-
-//     } catch (error) {
-//         // 5. Catch real database errors (like network failures)
-//         console.error(error);
-//         res.status(500).send("Error reading database"); 
-//     }
-// };
 
 
 exports.songDetail = async function (req, res) {
@@ -88,6 +55,7 @@ exports.songDetail = async function (req, res) {
     res.render('song/songDetail', {
         song: song,
         reviews: reviews,
+        username:username,
         userRole: user_role,
         userReview: userReview,
         averageRating: averageRating,
@@ -122,7 +90,8 @@ exports.showAddSongForm = async (req, res) => {
 
     res.render("song/addSong", {
         user_role: user_role,
-        categories: categories
+        categories: categories,
+        username:username
     });
 };
 
@@ -161,26 +130,42 @@ exports.insertSong = async (req, res) => {
 
 // --- EDIT SONG CONTROLLER ---
 exports.showEditSongForm = async (req, res) => {
-    // 1. Grab the songID from the URL (e.g., /song/editSong?songID=101)
     let songID = req.query.songID;
+    let user_role = undefined;
+    let username = undefined;
 
-    // 2. Safety check: If there's no ID in the URL, send them back to the list
+    if (req.session.user != undefined) {
+        user_role = req.session.user.role;
+        username = req.session.user.username;
+    }
+
+    // SECURITY CHECK: Kick out anyone who isn't an admin
+    if (user_role !== "admin") {
+        // This sends a popup alert to the browser, then redirects them to the library
+        return res.send('<script>alert("Access Denied: You do not have permission to view this page."); window.location.href="/song/allSong";</script>');
+    }
+
     if (!songID) {
         return res.redirect("/song/allSong");
     }
 
     try {
-        // 3. Use your custom model method to find the specific song
         let song = await SongModel.findBySongId(songID);
-        // let song = songs[songID-1]
-        // 4. If someone typed in a fake ID that isn't in the database
+
         if (!song) {
             console.log("Could not find song ID to edit:", songID);
             return res.redirect("/song/allSong");
         }
 
-        // 5. Success! Render the edit page and pass the 'song' object to EJS
-        res.render("song/editSong", { song: song });
+        // NEW: Fetch all categories so we can populate the dropdown menu
+        let categories = await CategoryModel.retrieveAll();
+
+        // Pass BOTH the specific song and the list of categories to EJS
+        res.render("song/editSong", {
+            song: song,
+            categories: categories,
+            username:username
+        });
 
     } catch (error) {
         console.error("Error loading the edit form:", error);
@@ -190,10 +175,27 @@ exports.showEditSongForm = async (req, res) => {
 
 exports.updateSong = async (req, res) => {
     try {
-        // req.body.song_id tells it WHICH song to update
-        // req.body contains the newly updated text
-        await SongModel.editSong(req.body.song_id, req.body);
-        res.redirect("/song/allSong");
+        // 1. Extract all the pieces from the submitted form
+        const { song_id, songname, artist, categoryData, description } = req.body;
+
+        // 2. Split the "ID|Name" string from the dropdown
+        const [category_id, category_name] = categoryData.split('|');
+
+        // 3. Construct a clean, updated song object
+        const updatedSongData = {
+            songname: songname,
+            artist: artist,
+            category_id: category_id,
+            category: category_name,
+            description: description
+        };
+
+        // 4. Send the ID and the new object to your model to execute the update
+        await SongModel.editSong(song_id, updatedSongData);
+
+        // 5. Redirect back to the library
+        res.redirect(`/song/songDetail?songID=${song_id}`);
+
     } catch (error) {
         console.error(error);
         res.send("Error updating the song");
@@ -228,7 +230,7 @@ exports.searchSongs = async (req, res) => {
         // console.log("search result for "+songs)
         // console.log("This is the searchTerm for song "+searchTerm)
         // Send BOTH the songs array and the search term back to the page
-        res.render("song/searchResult", { songs: songs, searchTerm: searchTerm });
+        res.render("song/searchResult", { songs: songs, searchTerm: searchTerm,username:username, });
 
     } catch (error) {
         console.error("Search error:", error);
@@ -237,6 +239,6 @@ exports.searchSongs = async (req, res) => {
 };
 
 
-// -- ADDED THIS SECTION FOR REVIEWS!!! TRIALLL ----//////
+
 
 

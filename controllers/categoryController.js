@@ -1,9 +1,16 @@
-const Category = require('../model/categoryModel');
-
+const CategoryModel = require('../model/categoryModel');
+const SongModel = require('../model/songModel');
 exports.getAllCategories = async (req, res) => {
+    let user_role = undefined;
+    let username = undefined;
+
+    if (req.session.user != undefined) {
+        user_role = req.session.user.role;
+        username = req.session.user.username;
+    }
     try {
-        const categories = await Category.retrieveAll();
-        res.render("category/allCategory", { categories }); 
+        const categories = await CategoryModel.retrieveAll();
+        res.render("category/allCategory", { categories, user_role:user_role,username:username });
     } catch (error) {
         console.error(error);
         res.status(500).send("Error reading categories from database");
@@ -16,7 +23,7 @@ exports.renderAddForm = (req, res) => {
 
 exports.insertCategory = async (req, res) => {
     try {
-        await Category.addCategory(req.body);
+        await CategoryModel.addCategory(req.body);
         res.redirect("/category/allCategories");
     } catch (error) {
         console.error(error);
@@ -29,9 +36,9 @@ exports.showEditForm = async (req, res) => {
     if (!categoryID) return res.redirect("/category/allCategories");
 
     try {
-        let category = await Category.findByCategoryId(categoryID);
+        let category = await CategoryModel.findByCategoryId(categoryID);
         if (!category) return res.redirect("/category/allCategories");
-        
+
         res.render("category/editCategory", { category });
     } catch (error) {
         console.error(error);
@@ -41,7 +48,7 @@ exports.showEditForm = async (req, res) => {
 
 exports.updateCategory = async (req, res) => {
     try {
-        await Category.editCategory(req.body.category_id, req.body);
+        await CategoryModel.editCategory(req.body.category_id, req.body);
         res.redirect("/category/allCategories");
     } catch (error) {
         console.error(error);
@@ -52,10 +59,49 @@ exports.updateCategory = async (req, res) => {
 exports.deleteCategory = async (req, res) => {
     let categoryID = req.query.categoryID;
     try {
-        await Category.deleteCategory(categoryID);
+        await CategoryModel.deleteCategory(categoryID);
         res.redirect("/category/allCategories");
     } catch (error) {
         console.error(error);
         res.send("Error deleting the category");
+    }
+};
+
+exports.displayCatDetail = async (req, res) => {
+    // 1. Grab the ID from the URL
+    let categoryID = req.query.categoryID;
+    let user_role = undefined;
+    let username = undefined;
+
+    if (req.session.user != undefined) {
+        user_role = req.session.user.role;
+        username = req.session.user.username;
+    }
+    // console.log(user_role)
+    // Safety check: if there is no ID, send them back to the categories list
+    if (!categoryID) {
+        return res.redirect("/category/allCategory");
+    }
+
+    try {
+        // 2. Fetch the category name (so we can display "Songs in Pop" at the top of the page)
+        // Note: Change 'findByCategoryId' to whatever your CategoryModel method is actually named!
+        let category = await CategoryModel.findByCategoryId(categoryID);
+
+        // 3. Fetch ONLY the songs that belong to this category
+        // Note: Change 'findSongsByCategory' to whatever your SongModel method is named!
+        let filteredSongs = await SongModel.findSongsByCat(categoryID);
+
+        // 4. Render a new page and pass the data over
+        res.render("category/catDetail", {
+            category: category,
+            songs: filteredSongs,
+            user_role: user_role,
+            username:username
+        });
+
+    } catch (error) {
+        console.error("Error loading songs for this category:", error);
+        res.status(500).send("Error loading the playlist.");
     }
 };

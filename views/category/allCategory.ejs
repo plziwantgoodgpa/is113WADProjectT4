@@ -1,46 +1,78 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
-    <title>All Categories</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>All Categories | BeatVault</title>
+    <link rel="stylesheet" href="/css/style.css">
+    <link rel="stylesheet" href="/css/songTable.css">
 </head>
+
 <body>
-    <h1>Category Management</h1>
-    
-    <a href="/category/addCategory"><button>+ Add New Category</button></a>
-    <br><br>
 
-    <% if (categories && categories.length > 0) { %>
-        <table border="1" cellpadding="10" cellspacing="0">
-            <thead>
-                <tr>
-                    <th>ID</th>
-                    <th>Category Name</th>
-                    <th>Description</th>
-                    <th>Action</th>
-                </tr>
-            </thead>
-            <tbody>
-                <% categories.forEach(function(cat) { %>
+    <nav class="navbar">
+        <a href="/" class="nav-brand">🎵 Spotify</a>
+
+        <div class="nav-links">
+            <a href="/song/allsong">Songs</a>
+            <a href="/category/allCategory" style="color: #ffffff;">Categories</a>
+            <a href="/playlist">Playlists</a>
+
+            <% if (username == undefined) { %>
+                <a href="/user/login" class="btn btn-outline">Log in</a>
+                <% } else { %>
+                    <a href="/user/profile?username=<%= username %>" class="btn">Profile (<%= username %>)</a>
+                    <a href="/user/logout" class="btn btn-outline">Log out</a>
+                    <% } %>
+        </div>
+    </nav>
+    <div class="container">
+        <div class="page-header">
+            <h1>Browse Categories</h1>
+            <% if (user_role=="admin" ) { %>
+                <a href="/category/addCategory" class="btn">+ Add New Category</a>
+                <% } %>
+        </div>
+
+        <% if (categories && categories.length> 0) { %>
+            <table class="song-table">
+                <thead>
                     <tr>
-                        <td><%= cat.category_id %></td>
-                        <td><%= cat.name %></td>
-                        <td><%= cat.description %></td>
-                        <td>
-                            <a href="/category/editCategory?categoryID=<%= cat.category_id %>">Edit</a> | 
-                            <a href="/category/deleteCategory?categoryID=<%= cat.category_id %>" onclick="return confirm('Delete this category?');">Delete</a>
-                        </td>
+                        <th>ID</th>
+                        <th>Category Name</th>
+                        <th>Description</th>
+                        <th>Action</th>
                     </tr>
-                <% }) %>
-            </tbody>
-        </table>
-    <% } else { %>
-        <p>There are no categories yet.</p>
-    <% } %>
+                </thead>
+                <tbody>
+                    <% categories.forEach(function(cat) { %>
+                        <tr>
+                            <td>
+                                <%= cat.category_id %>
+                            </td>
+                            <td><strong>
+                                    <%= cat.name %>
+                                </strong></td>
+                            <td style="color: #b3b3b3;">
+                                <%= cat.description %>
+                            </td>
+                            <td>
+                                <a href="/category/catDetail?categoryID=<%= cat.category_id %>"
+                                    class="btn btn-outline btn-small">View Songs</a>
+                            </td>
+                        </tr>
+                        <% }) %>
+                </tbody>
+            </table>
+            <% } else { %>
+                <div class="empty-state">
+                    <p>There are no categories yet.</p>
+                </div>
+                <% } %>
 
-    <br>
-    <a href="/">Back to Home</a> 
-    |
-    <a href="/song/allSong">Go to Songs</a>
+    </div>
+
 </body>
+
 </html>

@@ -6,7 +6,7 @@ const categoryController = require('../controllers/categoryController');
 
 // When a GET request hits '/api/songs', run the getAllSongs function
 router.get('/allCategory', categoryController.getAllCategories);
-
+router.get('/catDetail', categoryController.displayCatDetail);
 // ADD category
 router.get('/addCategory', categoryController.renderAddForm);// Shows the blank form
 router.post('/addCategory', categoryController.insertCategory);       // Processes the form submission

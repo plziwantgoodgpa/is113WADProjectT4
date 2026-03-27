@@ -9,11 +9,20 @@
 </head>
 <body>
 
-    <nav class="navbar">
-        <a href="/" class="nav-brand">🎵 BeatVault</a>
+  <nav class="navbar">
+        <a href="/" class="nav-brand">🎵 Spotify</a>
+
         <div class="nav-links">
-            <a href="/">Home</a>
             <a href="/song/allsong" style="color: #ffffff;">Songs</a>
+            <a href="/category/allCategory">Categories</a>
+            <a href="/playlist">Playlists</a>
+
+            <% if (username == undefined) { %>
+                <a href="/user/login" class="btn btn-outline">Log in</a>
+                <% } else { %>
+                    <a href="/user/profile?username=<%= username %>" class="btn">Profile (<%= username %>)</a>
+                    <a href="/user/logout" class="btn btn-outline">Log out</a>
+                    <% } %>
         </div>
     </nav>
 

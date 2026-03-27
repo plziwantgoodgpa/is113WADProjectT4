@@ -2,31 +2,83 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Edit Song</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Edit Song | BeatVault</title>
+    
+    <link rel="stylesheet" href="/css/style.css">
+    <link rel="stylesheet" href="/css/songDetailPage.css">
+    <link rel="stylesheet" href="/css/songTable.css">
+    <link rel="stylesheet" href="/css/songForm.css">
 </head>
 <body>
-    <h1>Edit Song: <%= song.songname %></h1>
-    
-    <form action="/song/editSong" method="POST">
-        <label>Song ID (Cannot be changed):</label><br>
-        <input type="number" name="song_id" value="<%= song.song_id %>" readonly><br><br>
 
-        <label>Song Name:</label><br>
-        <input type="text" name="songname" value="<%= song.songname %>" required><br><br>
+  <nav class="navbar">
+        <a href="/" class="nav-brand">🎵 Spotify</a>
 
-        <label>Artist:</label><br>
-        <input type="text" name="artist" value="<%= song.artist %>" required><br><br>
+        <div class="nav-links">
+            <a href="/song/allsong" style="color: #ffffff;">Songs</a>
+            <a href="/category/allCategory">Categories</a>
+            <a href="/playlist">Playlists</a>
 
-        <label>Category:</label><br>
-        <input type="text" name="category" value="<%= song.category %>" required><br><br>
+            <% if (username == undefined) { %>
+                <a href="/user/login" class="btn btn-outline">Log in</a>
+                <% } else { %>
+                    <a href="/user/profile?username=<%= username %>" class="btn">Profile (<%= username %>)</a>
+                    <a href="/user/logout" class="btn btn-outline">Log out</a>
+                    <% } %>
+        </div>
+    </nav>
 
-        <label>Description:</label><br>
-        <textarea name="description" required><%= song.description %></textarea><br><br>
+    <div class="container">
+        
+        <div class="page-header">
+            <h1>Edit Song: <span style="color: #1db954;"><%= song.songname %></span></h1>
+            <a href="/song/songDetail?songID=<%= song.song_id %>" class="btn btn-outline">← Cancel</a>
+        </div>
 
-        <button type="submit">Update Song</button>
-    </form>
-    
-    <br>
-    <a href="/song/songDetail?songID=<%= song.song_id %>">Cancel / Go Back</a>
+        <div class="form-container">
+            <form action="/song/editSong" method="POST" class="custom-form">
+                
+                <div class="form-group">
+                    <label>Song ID (Cannot be changed):</label>
+                    <input type="number" name="song_id" value="<%= song.song_id %>" readonly style="background-color: #1a1a1a; color: #666; cursor: not-allowed;">
+                </div>
+
+                <div class="form-group">
+                    <label>Song Name:</label>
+                    <input type="text" name="songname" value="<%= song.songname %>" required>
+                </div>
+
+                <div class="form-group">
+                    <label>Artist:</label>
+                    <input type="text" name="artist" value="<%= song.artist %>" required>
+                </div>
+
+                <div class="form-group">
+                    <label>Category:</label>
+                    <select name="categoryData" required>
+                        <option value="" disabled>Select a Category...</option>
+                        
+                        <% categories.forEach(function(cat) { %>
+                            <option value="<%= cat.category_id %>|<%= cat.name %>" 
+                                <%= song.category_id == cat.category_id ? 'selected' : '' %>>
+                                <%= cat.name %>
+                            </option>
+                        <% }) %>
+                        
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label>Description:</label>
+                    <textarea name="description" rows="5" required><%= song.description %></textarea>
+                </div>
+
+                <button type="submit" class="btn btn-submit">Update Song</button>
+            </form>
+        </div>
+
+    </div>
+
 </body>
 </html>
