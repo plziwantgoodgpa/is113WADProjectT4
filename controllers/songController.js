@@ -15,7 +15,7 @@ exports.getAllSongs = async (req, res) => {
         let songs = await SongModel.retrieveAll();
         console.log(songs)
         // Send a successful response back to the client
-        res.render("song/allSong", { songs, user_role , username})
+        res.render("song/allSong", { songs, user_role, username })
 
     } catch (error) {
         // If something goes wrong (e.g., database is down), catch the error
@@ -55,7 +55,7 @@ exports.songDetail = async function (req, res) {
     res.render('song/songDetail', {
         song: song,
         reviews: reviews,
-        username:username,
+        username: username,
         userRole: user_role,
         userReview: userReview,
         averageRating: averageRating,
@@ -91,7 +91,7 @@ exports.showAddSongForm = async (req, res) => {
     res.render("song/addSong", {
         user_role: user_role,
         categories: categories,
-        username:username
+        username: username
     });
 };
 
@@ -164,7 +164,7 @@ exports.showEditSongForm = async (req, res) => {
         res.render("song/editSong", {
             song: song,
             categories: categories,
-            username:username
+            username: username
         });
 
     } catch (error) {
@@ -219,7 +219,13 @@ exports.deleteSong = async (req, res) => {
 exports.searchSongs = async (req, res) => {
     // We use 'q' for query, which will come from our search form input
     let searchTerm = req.query.searchTerm;
+    let user_role = undefined;
+    let username = undefined;
 
+    if (req.session.user != undefined) {
+        user_role = req.session.user.role;
+        username = req.session.user.username;
+    }
     try {
         let songs = [];
 
@@ -230,7 +236,7 @@ exports.searchSongs = async (req, res) => {
         // console.log("search result for "+songs)
         // console.log("This is the searchTerm for song "+searchTerm)
         // Send BOTH the songs array and the search term back to the page
-        res.render("song/searchResult", { songs: songs, searchTerm: searchTerm,username:username, });
+        res.render("song/searchResult", { songs: songs, searchTerm: searchTerm, username: username, });
 
     } catch (error) {
         console.error("Search error:", error);

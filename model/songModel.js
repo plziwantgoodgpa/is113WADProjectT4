@@ -55,7 +55,6 @@ exports.addSong = async function(songData) {
 
     // 3. Inject this new ID into the data that came from the HTML form
     songData.song_id = nextId;
-    songData.category_id = 11
     // 4. Create and save the new song!
     const newSong = new Song(songData);
     return newSong.save(); 

@@ -10,7 +10,7 @@ exports.getAllCategories = async (req, res) => {
     }
     try {
         const categories = await CategoryModel.retrieveAll();
-        res.render("category/allCategory", { categories, user_role:user_role,username:username });
+        res.render("category/allCategory", { categories, user_role: user_role, username: username });
     } catch (error) {
         console.error(error);
         res.status(500).send("Error reading categories from database");
@@ -18,13 +18,24 @@ exports.getAllCategories = async (req, res) => {
 };
 
 exports.renderAddForm = (req, res) => {
-    res.render("category/addCategory");
+    let user_role = undefined;
+    let username = undefined;
+
+    if (req.session.user != undefined) {
+        user_role = req.session.user.role;
+        username = req.session.user.username;
+    }
+    if (user_role !== "admin") {
+        // This sends a popup alert to the browser, then redirects them to the library
+        return res.send('<script>alert("Access Denied: You do not have permission to view this page."); window.location.href="/song/allSong";</script>');
+    }
+    res.render("category/addCategory", { username });
 };
 
 exports.insertCategory = async (req, res) => {
     try {
         await CategoryModel.addCategory(req.body);
-        res.redirect("/category/allCategories");
+        res.redirect("/category/allCategory");
     } catch (error) {
         console.error(error);
         res.send("Error saving category. Make sure the name is unique!");
@@ -33,13 +44,27 @@ exports.insertCategory = async (req, res) => {
 
 exports.showEditForm = async (req, res) => {
     let categoryID = req.query.categoryID;
-    if (!categoryID) return res.redirect("/category/allCategories");
+    let user_role = undefined;
+    let username = undefined;
+
+    if (req.session.user != undefined) {
+        user_role = req.session.user.role;
+        username = req.session.user.username;
+    }
+
+    // SECURITY CHECK: Kick out anyone who isn't an admin
+    if (user_role !== "admin") {
+        // This sends a popup alert to the browser, then redirects them to the library
+        return res.send('<script>alert("Access Denied: You do not have permission to view this page."); window.location.href="/song/allSong";</script>');
+    }
+
+    if (!categoryID) return res.redirect("/category/allCategory");
 
     try {
         let category = await CategoryModel.findByCategoryId(categoryID);
-        if (!category) return res.redirect("/category/allCategories");
+        if (!category) return res.redirect("/category/allCategory");
 
-        res.render("category/editCategory", { category });
+        res.render("category/editCategory", { category, username, user_role });
     } catch (error) {
         console.error(error);
         res.status(500).send("Error loading category edit page");
@@ -49,7 +74,7 @@ exports.showEditForm = async (req, res) => {
 exports.updateCategory = async (req, res) => {
     try {
         await CategoryModel.editCategory(req.body.category_id, req.body);
-        res.redirect("/category/allCategories");
+        res.redirect("/category/allCategory");
     } catch (error) {
         console.error(error);
         res.send("Error updating the category");
@@ -97,7 +122,7 @@ exports.displayCatDetail = async (req, res) => {
             category: category,
             songs: filteredSongs,
             user_role: user_role,
-            username:username
+            username: username
         });
 
     } catch (error) {

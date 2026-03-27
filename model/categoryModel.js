@@ -19,21 +19,21 @@ const categorySchema = new mongoose.Schema({
 });
 
 // 2. Auto-Increment Hook for category_id
-categorySchema.pre('validate', async function(next) {
-    if (this.isNew) {
-        try {
-            const lastCategory = await this.constructor.findOne().sort({ category_id: -1 });
-            if (lastCategory && lastCategory.category_id) {
-                this.category_id = lastCategory.category_id + 1;
-            } else {
-                this.category_id = 1;
-            }
-        } catch (error) {
-            return next(error);
-        }
-    }
-    next();
-});
+// categorySchema.pre('validate', async function(next) {
+//     if (this.isNew) {
+//         try {
+//             const lastCategory = await this.constructor.findOne().sort({ category_id: -1 });
+//             if (lastCategory && lastCategory.category_id) {
+//                 this.category_id = lastCategory.category_id + 1;
+//             } else {
+//                 this.category_id = 1;
+//             }
+//         } catch (error) {
+//             return next(error);
+//         }
+//     }
+//     next();
+// });
 
 // 3. Create the Model
 const Category = mongoose.model('Category', categorySchema, 'Category');
@@ -42,28 +42,41 @@ const Category = mongoose.model('Category', categorySchema, 'Category');
 // 4. Custom Methods (Exported for the Controller)
 // --------------------------------------------------------
 
-exports.retrieveAll = function() {
+exports.retrieveAll = function () {
     return Category.find();
 };
 
-exports.findByCategoryId = function(category_id) {
+exports.findByCategoryId = function (category_id) {
     return Category.findOne({ category_id: category_id });
 };
 
-exports.addCategory = function(categoryData) {
+exports.addCategory = async function (categoryData) {
+
+    const lastCat = await Category.findOne().sort({ category_id: -1 });
+
+    // 2. Figure out the next ID
+    let nextId = 1; // Default to 1 if the database is completely empty
+    if (lastCat && lastCat.category_id) {
+        nextId = lastCat.category_id + 1; // Add 1 to the highest existing ID
+    }
+
+    // 3. Inject this new ID into the data that came from the HTML form
+    categoryData.category_id = nextId
+    // 4. Create and save the new song!
+
     const newCategory = new Category(categoryData);
     return newCategory.save();
 };
 
-exports.editCategory = function(category_id, updatedData) {
+exports.editCategory = function (category_id, updatedData) {
     return Category.findOneAndUpdate(
-        { category_id: category_id }, 
-        updatedData, 
+        { category_id: category_id },
+        updatedData,
         { runValidators: true }
     );
 };
 
-exports.deleteCategory = function(category_id) {
+exports.deleteCategory = function (category_id) {
     return Category.findOneAndDelete({ category_id: category_id });
 };
 
