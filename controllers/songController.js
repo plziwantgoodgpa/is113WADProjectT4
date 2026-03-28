@@ -2,22 +2,22 @@
 const SongModel = require('../model/songModel');
 const ReviewModel = require('../model/reviewModel');
 const CategoryModel = require('../model/categoryModel')
-// 2. Create and export the "Retrieve All" function
+
 exports.getAllSongs = async (req, res) => {
     let user_role = undefined
     let username = undefined
+    let sortOption = req.query.sort || 'songname';
     if (req.session.user != undefined) {
         user_role = req.session.user.role
         username = req.session.user.username
     }
     try {
-        // THE FORMULA: .find() with no arguments returns everything in the collection
         let songs = await SongModel.retrieveAll();
-        console.log(songs)
+        // console.log(songs)
         for (i = 0; i < songs.length; i++) {
             let currentSong = songs[i]
             let reviews = await ReviewModel.findBySongId(currentSong.song_id);
-            let averageRating =0
+            let averageRating = 0
             if (reviews.length > 0) {
                 let total = 0;
                 for (let review of reviews) {
@@ -25,13 +25,29 @@ exports.getAllSongs = async (req, res) => {
                 }
                 averageRating = total / reviews.length;
             }
-            else {
-                averageRating = "No ratings yet"
-            }
             songs[i].averageRating = averageRating
         }
+
+        if (sortOption === 'rating') {
+            // Sort by average rating (Highest to Lowest)
+            songs.sort((a, b) => b.averageRating - a.averageRating);
+
+        } else if (sortOption === 'artist') {
+            // Sort by Artist Name (A to Z) using localeCompare for strings
+            songs.sort((a, b) => a.artist.localeCompare(b.artist));
+
+        } else {
+            // Default: Sort by Song Name (A to Z)
+            songs.sort((a, b) => a.songname.localeCompare(b.songname));
+        }
+
+        for (i = 0; i < songs.length; i++) {
+            if (songs[i].averageRating == 0) {
+                songs[i].averageRating = "No ratings yet"
+            }
+        }
         // Send a successful response back to the client
-        res.render("song/allSong", { songs, user_role, username })
+        res.render("song/allSong", { songs, user_role, username, currentSort: sortOption })
 
     } catch (error) {
         // If something goes wrong (e.g., database is down), catch the error
@@ -244,10 +260,28 @@ exports.searchSongs = async (req, res) => {
     }
     try {
         let songs = [];
-
         // If the user actually typed something, run the search
         if (searchTerm) {
             songs = await SongModel.searchSongs(searchTerm);
+        }
+
+        for (i = 0; i < songs.length; i++) {
+            let currentSong = songs[i]
+            let reviews = await ReviewModel.findBySongId(currentSong.song_id);
+            let averageRating = 0
+            if (reviews.length > 0) {
+                let total = 0;
+                for (let review of reviews) {
+                    total += review.rating;
+                }
+                averageRating = total / reviews.length;
+            }
+            songs[i].averageRating = averageRating
+        }
+        for (i = 0; i < songs.length; i++) {
+            if (songs[i].averageRating == 0) {
+                songs[i].averageRating = "No ratings yet"
+            }
         }
         // console.log("search result for "+songs)
         // console.log("This is the searchTerm for song "+searchTerm)

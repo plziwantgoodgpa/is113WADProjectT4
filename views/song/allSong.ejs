@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -7,9 +8,10 @@
     <link rel="stylesheet" href="/css/style.css">
     <link rel="stylesheet" href="/css/songTable.css">
 </head>
+
 <body>
 
-  <nav class="navbar">
+    <nav class="navbar">
         <a href="/" class="nav-brand">🎵 Spotify</a>
 
         <div class="nav-links">
@@ -17,7 +19,7 @@
             <a href="/category/allCategory">Categories</a>
             <a href="/playlist">Playlists</a>
 
-            <% if (username == undefined) { %>
+            <% if (username==undefined) { %>
                 <a href="/user/login" class="btn btn-outline">Log in</a>
                 <% } else { %>
                     <a href="/user/profile?username=<%= username %>" class="btn">Profile (<%= username %>)</a>
@@ -29,20 +31,38 @@
     <div class="container">
         <div class="page-header">
             <h1>All Songs Library</h1>
-            
-            <% if (typeof user_role !== 'undefined' && user_role == "admin") { %>
-                <a href="/song/addSong" class="btn">+ Add New Song</a>
-            <% } %>
-        </div>
 
-        <div class="search-container">
-            <form action="/song/search" method="GET" class="search-form">
-                <input type="text" name="searchTerm" placeholder="Search by Song Name or Category (e.g., Pop, Thriller...)" required>
+            <% if (typeof user_role !=='undefined' && user_role=="admin" ) { %>
+                <a href="/song/addSong" class="btn">+ Add New Song</a>
+                <% } %>
+        </div>
+        <div class="search-container" style="display: flex; gap: 20px; align-items: center; flex-wrap: wrap;">
+
+            <form action="/song/search" method="GET" class="search-form"
+                style="flex-grow: 1; display: flex; gap: 10px;">
+                <input type="text" name="searchTerm" placeholder="Search by Song Name or Category..." required
+                    style="flex-grow: 1;">
                 <button type="submit" class="btn">Search</button>
             </form>
-        </div>
 
-        <% if (songs != undefined && songs.length > 0) { %>
+
+
+        </div>
+        <form action="/song/allsong" method="GET" class="sort-form"
+            style="display: flex; gap: 10px; align-items: center;">
+            <label for="sortOption" style="color: #b3b3b3; font-weight: bold;">Sort By:</label>
+
+            <select name="sort" id="sortOption"
+                style="padding: 10px; border-radius: 5px; background-color: #2a2a2a; color: white; border: 1px solid #404040; outline: none; cursor: pointer;">
+                <option value="songname" <%=currentSort==='songname' ? 'selected' : '' %>>Song Name (A-Z)</option>
+                <option value="rating" <%=currentSort==='rating' ? 'selected' : '' %>>Rating (High to Low)</option>
+                <option value="artist" <%=currentSort==='artist' ? 'selected' : '' %>>Artist (A-Z)</option>
+            </select>
+
+            <button type="submit" class="btn btn-outline">Apply</button>
+        </form>
+        <br>
+        <% if (songs !=undefined && songs.length> 0) { %>
             <table class="song-table">
                 <thead>
                     <tr>
@@ -56,31 +76,39 @@
                 <tbody>
                     <% songs.forEach(function(song) { %>
                         <tr>
-                            <td><strong><%= song.songname %></strong></td>
-                            <td><%= song.artist %></td>
-                            <td><span class="category-badge"><%= song.category %></span></td>
+                            <td><strong>
+                                    <%= song.songname %>
+                                </strong></td>
                             <td>
-                            <span class="rating-badge">
-                                <% if (song.averageRating != "No ratings yet") { %>
-                                    ⭐ <%= song.averageRating.toFixed(1) %> / 5.0
-                                <% } else { %>
-                                    No ratings yet
-                                <% } %>
-                            </span>
-                        </td>
+                                <%= song.artist %>
+                            </td>
+                            <td><span class="category-badge">
+                                    <%= song.category %>
+                                </span></td>
                             <td>
-                                <a href="/song/songDetail?songID=<%= song.song_id %>" class="btn btn-outline btn-small">View Details</a>
+                                <span class="rating-badge">
+                                    <% if (song.averageRating !="No ratings yet" ) { %>
+                                        ⭐ <%= song.averageRating.toFixed(1) %> / 5.0
+                                            <% } else { %>
+                                                No ratings yet
+                                                <% } %>
+                                </span>
+                            </td>
+                            <td>
+                                <a href="/song/songDetail?songID=<%= song.song_id %>"
+                                    class="btn btn-outline btn-small">View Details</a>
                             </td>
                         </tr>
-                    <% }) %>
+                        <% }) %>
                 </tbody>
             </table>
-        <% } else { %>
-            <div class="empty-state">
-                <p>There are currently no songs in the database. Try adjusting your search or add a new song!</p>
-            </div>
-        <% } %>
+            <% } else { %>
+                <div class="empty-state">
+                    <p>There are currently no songs in the database. Try adjusting your search or add a new song!</p>
+                </div>
+                <% } %>
     </div>
 
 </body>
+
 </html>
