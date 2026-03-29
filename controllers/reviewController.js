@@ -78,7 +78,7 @@ exports.editReview = async function(req, res) {
         reviewMessage = rawReviewMessage.trim();
     }
 
-    if (!req.session.user_id) {
+    if (!req.session.username) {
         errors.push("Please log in before editing a review.");
     }
 
@@ -92,7 +92,7 @@ exports.editReview = async function(req, res) {
 
     const song = await songModel.findBySongId(song_id);
     const reviews = await reviewModel.findBySongId(song_id);
-    const userReview = await reviewModel.findOneReview(song_id, req.session.user_id);
+    const userReview = await reviewModel.findOneReview(song_id, req.session.username);
 
     if (errors.length > 0) {
         return res.render('song/songDetail', {
@@ -105,11 +105,11 @@ exports.editReview = async function(req, res) {
                 rating: req.body.rating,
                 reviewMessage: reviewMessage
             },
-            user_id: req.session.user_id || null
+            username: req.session.username || null
         });
     }
 
-    await reviewModel.editReview(song_id, req.session.user_id, {
+    await reviewModel.editReview(song_id, req.session.username, {
         rating: rating,
         reviewMessage: reviewMessage,
         review_date_time: new Date()
@@ -121,11 +121,11 @@ exports.editReview = async function(req, res) {
 exports.deleteReview = async function(req, res) {
     const song_id = parseInt(req.body.song_id);
 
-    if (!req.session.user_id) {
+    if (!req.session.username) {
         return res.redirect('/song/songDetail?songID=' + song_id);
     }
 
-    await reviewModel.deleteReview(song_id, req.session.user_id);
+    await reviewModel.deleteReview(song_id, req.session.username);
 
     res.redirect('/song/songDetail?songID=' + song_id);
 };

@@ -4,14 +4,9 @@ const router = express.Router();
 const reviewController = require("../controllers/reviewController");
 
 router.post("/add-review", reviewController.addReview);
-router.post("/edit-review", reviewController.editReview);
-router.post("/delete-review", reviewController.deleteReview);
+router.get("/song/songDetail", reviewController.editReview);
+router.post("/song/songDetail", reviewController.editReview);
+
 
 module.exports = router;
-
-
-
-
-
-
 

@@ -28,7 +28,7 @@ server.use("/song", songRoutes);
 server.use("/review", reviewRoutes)
 server.use("/playlist", playlistRoutes);
 server.use("/category", categoryRoutes);
-server.use('/user',userRoutes)
+server.use("/user",userRoutes)
 // async function to connect to DB
 async function connectDB() {
   try {
