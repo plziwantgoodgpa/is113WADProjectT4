@@ -84,20 +84,21 @@ exports.songDetail = async function (req, res) {
         averageRating = total / reviews.length;
     }
 
-    res.render('song/songDetail', {
-        song: song,
-        reviews: reviews,
-        username: username,
-        userRole: user_role,
-        userReview: userReview,
-        averageRating: averageRating,
-        error: "",
-        formData: {
-            rating: "",
-            reviewMessage: ""
-        },
-        username: username
-    });
+ 
+        res.render("song/songDetail", {
+            song: song,
+            reviews: reviews,
+            username: username,
+            userRole: user_role,
+            userReview: userReview,
+            averageRating: averageRating,
+            error: "",
+            formData: {
+                rating: "",
+                reviewMessage: ""
+            }
+        });
+  
 };
 
 
