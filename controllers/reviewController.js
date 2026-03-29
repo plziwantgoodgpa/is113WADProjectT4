@@ -1,7 +1,7 @@
 const reviewModel = require('../model/reviewModel');
 const songModel = require('../model/songModel');
 
-exports.addReview = async function(req, res) {
+exports.addReview = async function (req, res) {
     const song_id = parseInt(req.body.song_id);
     const rawReviewMessage = req.body.reviewMessage;
     const rating = parseInt(req.body.rating);
@@ -19,7 +19,7 @@ exports.addReview = async function(req, res) {
         reviewMessage = rawReviewMessage.trim();
     }
 
-    if (username==undefined) {
+    if (username == undefined) {
         errors.push("Please log in before adding a review.");
     }
 
@@ -66,19 +66,26 @@ exports.addReview = async function(req, res) {
     res.redirect('/song/songDetail?songID=' + song_id);
 };
 
-exports.editReview = async function(req, res) {
+exports.editReview = async function (req, res) {
     const song_id = parseInt(req.body.song_id);
     const rawReviewMessage = req.body.reviewMessage;
     const rating = parseInt(req.body.rating);
 
     let reviewMessage = "";
     let errors = [];
+    let user_role = undefined;
+    let username = undefined;
+
+    if (req.session.user != undefined) {
+        user_role = req.session.user.role;
+        username = req.session.user.username;
+    }
 
     if (rawReviewMessage !== undefined) {
         reviewMessage = rawReviewMessage.trim();
     }
 
-    if (!req.session.username) {
+    if (!username) {
         errors.push("Please log in before editing a review.");
     }
 
@@ -105,11 +112,11 @@ exports.editReview = async function(req, res) {
                 rating: req.body.rating,
                 reviewMessage: reviewMessage
             },
-            username: req.session.username || null
+            username: username
         });
     }
 
-    await reviewModel.editReview(song_id, req.session.username, {
+    await reviewModel.editReview(song_id, username, {
         rating: rating,
         reviewMessage: reviewMessage,
         review_date_time: new Date()
@@ -118,7 +125,7 @@ exports.editReview = async function(req, res) {
     res.redirect('/song/songDetail?songID=' + song_id);
 };
 
-exports.deleteReview = async function(req, res) {
+exports.deleteReview = async function (req, res) {
     const song_id = parseInt(req.body.song_id);
 
     if (!req.session.username) {

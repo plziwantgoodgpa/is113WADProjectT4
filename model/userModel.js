@@ -21,6 +21,10 @@ const userSchema = new mongoose.Schema({
         enum: ['user', 'admin'], 
         default: 'user'
     }
+    // bio:{
+    //      type: String,
+    //      default: 'no bio'
+    // }
 });
 
 const User = mongoose.model('User', userSchema, 'User');

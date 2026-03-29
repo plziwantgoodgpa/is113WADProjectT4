@@ -103,7 +103,7 @@
                                     <summary class="btn btn-outline" style="cursor: pointer;">Edit Your Review</summary>
 
                                     <div class="review-form-box content-box" style="margin-top: 15px;">
-                                        <form action="/song/songDetail" method="POST" class="custom-form">
+                                        <form action="/review/editReview" method="POST" class="custom-form">
                                             <input type="hidden" name="song_id" value="<%= song.song_id %>">
 
                                             <div class="form-group">
@@ -127,11 +127,13 @@
                                         Delete Review
                                     </button>
                                 </form>
+
                             </div>
                         </div>
                     <% } else { %>
                         <div class="review-form-box content-box">
                             <h3>Leave a Review</h3>
+
                             <form action="/review/add-review" method="POST" class="custom-form">
                                 <input type="hidden" name="song_id" value="<%= song.song_id %>">
                                 
@@ -147,6 +149,7 @@
                                 
                                 <button type="submit" class="btn">Submit Review</button>
                             </form>
+
                         </div>
                     <% } %>
                 <% } else { %>
