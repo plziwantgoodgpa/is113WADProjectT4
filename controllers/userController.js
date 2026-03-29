@@ -50,3 +50,13 @@ exports.loginPost = async (req, res) =>{
         res.redirect('/user/login')
     }
 };
+
+exports.logout = (req, res) => {
+    req.session.destroy((err) => {
+        if (err) {
+            console.error(err);
+            return res.send('Error logging out');
+        }
+        res.redirect('/');
+    });
+};

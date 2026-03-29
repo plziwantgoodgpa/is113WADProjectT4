@@ -2,6 +2,7 @@ const dns = require("node:dns")
 dns.setServers(['1.1.1.1','8.8.8.8'])
 const express = require("express");
 const dotenv = require('dotenv');
+dotenv.config({ path: './config.env' });
 const mongoose = require('mongoose');
 const fs = require('fs');
 const server = express();
@@ -13,7 +14,6 @@ const homeRoutes = require("./routes/homeRoutes")
 const categoryRoutes = require("./routes/categoryRoutes")
 const session = require("express-session");
 // Specify the path to the environment variable file 'config.env'
-dotenv.config({ path: './config.env' });
 server.use(express.urlencoded({ extended: true }));
 server.set("view engine", "ejs");
 server.use(session({

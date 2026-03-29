@@ -1,31 +1,334 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <title><%= playlist.PlayListName %></title>
+    <title><%= playlist.PlayListName %> – Spotify Playlist</title>
+    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+        :root {
+            --green: #1DB954;
+            --green-hover: #1ed760;
+            --black: #121212;
+            --dark: #181818;
+            --card: #282828;
+            --card-hover: #333333;
+            --text: #FFFFFF;
+            --muted: #B3B3B3;
+            --border: #ffffff1a;
+            --sidebar: 240px;
+        }
+
+        body {
+            background: var(--black);
+            color: var(--text);
+            font-family: 'DM Sans', sans-serif;
+            min-height: 100vh;
+            display: flex;
+        }
+
+        /* Sidebar */
+        .sidebar {
+            width: var(--sidebar);
+            background: #000;
+            padding: 24px 12px;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            position: fixed;
+            top: 0; left: 0; bottom: 0;
+            z-index: 10;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 8px 12px 24px;
+        }
+
+        .logo svg { width: 32px; height: 32px; fill: var(--green); }
+        .logo-text { font-weight: 700; font-size: 18px; letter-spacing: -0.3px; }
+
+        .nav-item {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            padding: 10px 12px;
+            border-radius: 6px;
+            color: var(--muted);
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 14px;
+            transition: color 0.15s;
+        }
+
+        .nav-item:hover { color: var(--text); }
+        .nav-item.active { color: var(--text); }
+        .nav-item svg { width: 22px; height: 22px; fill: currentColor; flex-shrink: 0; }
+
+        /* Main */
+        .main {
+            margin-left: var(--sidebar);
+            flex: 1;
+            min-height: 100vh;
+        }
+
+        /* Hero */
+        .hero {
+            background: linear-gradient(180deg, #1a4a2e 0%, #0d2b1a 60%, var(--black) 100%);
+            padding: 60px 32px 32px;
+            display: flex;
+            align-items: flex-end;
+            gap: 24px;
+        }
+
+        .hero-art {
+            width: 200px;
+            height: 200px;
+            background: linear-gradient(135deg, #2a7a4a, #0d2b1a);
+            border-radius: 4px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+            box-shadow: 0 16px 48px rgba(0,0,0,0.5);
+        }
+
+        .hero-art svg { width: 80px; height: 80px; fill: rgba(255,255,255,0.3); }
+
+        .hero-info { padding-bottom: 8px; }
+        .hero-type { font-size: 12px; font-weight: 700; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 8px; }
+        .hero-title { font-size: 52px; font-weight: 700; letter-spacing: -1px; line-height: 1.1; margin-bottom: 12px; }
+        .hero-meta { color: var(--muted); font-size: 14px; }
+        .hero-meta span { color: var(--text); font-weight: 600; }
+
+        /* Controls */
+        .controls {
+            padding: 24px 32px;
+            display: flex;
+            align-items: center;
+            gap: 24px;
+            background: linear-gradient(var(--black), var(--black));
+        }
+
+        .btn-play {
+            width: 56px;
+            height: 56px;
+            background: var(--green);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-decoration: none;
+            transition: background 0.15s, transform 0.1s;
+            box-shadow: 0 8px 24px rgba(29,185,84,0.4);
+        }
+
+        .btn-play:hover { background: var(--green-hover); transform: scale(1.06); }
+        .btn-play svg { width: 24px; height: 24px; fill: #000; margin-left: 3px; }
+
+        .btn-add {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            color: var(--muted);
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 14px;
+            padding: 8px 16px;
+            border: 1px solid var(--border);
+            border-radius: 500px;
+            transition: color 0.15s, border-color 0.15s;
+        }
+
+        .btn-add:hover { color: var(--text); border-color: var(--text); }
+        .btn-add svg { width: 16px; height: 16px; fill: currentColor; }
+
+        /* Song list */
+        .song-list {
+            padding: 0 32px;
+        }
+
+        .song-list-header {
+            display: grid;
+            grid-template-columns: 40px 1fr 1fr 80px;
+            gap: 16px;
+            padding: 0 16px 8px;
+            border-bottom: 1px solid var(--border);
+            margin-bottom: 8px;
+            color: var(--muted);
+            font-size: 12px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .song-row {
+            display: grid;
+            grid-template-columns: 40px 1fr 1fr 80px;
+            gap: 16px;
+            padding: 8px 16px;
+            border-radius: 6px;
+            align-items: center;
+            transition: background 0.15s;
+            animation: fadeIn 0.3s ease both;
+        }
+
+        .song-row:hover { background: var(--card); }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to   { opacity: 1; }
+        }
+
+        .song-row:nth-child(1) { animation-delay: 0.05s; }
+        .song-row:nth-child(2) { animation-delay: 0.1s; }
+        .song-row:nth-child(3) { animation-delay: 0.15s; }
+        .song-row:nth-child(4) { animation-delay: 0.2s; }
+        .song-row:nth-child(5) { animation-delay: 0.25s; }
+
+        .song-num {
+            color: var(--muted);
+            font-size: 15px;
+            text-align: center;
+        }
+
+        .song-info { overflow: hidden; }
+
+        .song-name {
+            font-weight: 600;
+            font-size: 15px;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .song-artist {
+            color: var(--muted);
+            font-size: 13px;
+            margin-top: 2px;
+        }
+
+        .song-category {
+            color: var(--muted);
+            font-size: 14px;
+        }
+
+        .song-actions {
+            display: flex;
+            justify-content: flex-end;
+            opacity: 0;
+            transition: opacity 0.15s;
+        }
+
+        .song-row:hover .song-actions { opacity: 1; }
+
+        .btn-remove {
+            color: var(--muted);
+            text-decoration: none;
+            font-size: 13px;
+            font-weight: 600;
+            padding: 6px 12px;
+            border-radius: 500px;
+            border: 1px solid transparent;
+            transition: color 0.15s, border-color 0.15s;
+        }
+
+        .btn-remove:hover { color: #ff4444; border-color: #ff4444; }
+
+        .empty {
+            text-align: center;
+            padding: 60px 0;
+            color: var(--muted);
+        }
+
+        .empty h3 { color: var(--text); font-size: 20px; margin-bottom: 8px; }
+    </style>
 </head>
 <body>
 
-    <a href="/playlist">Back</a>
-    <h1><%= playlist.PlayListName %></h1>
-    
-    <a href="/playlist/<%= playlist.playList_id %>/addsong">+ Add Song</a>  
+    <!-- Sidebar -->
+    <nav class="sidebar">
+        <div class="logo">
+            <svg viewBox="0 0 24 24"><path d="M12 0C5.4 0 0 5.4 0 12s5.4 12 12 12 12-5.4 12-12S18.66 0 12 0zm5.521 17.34c-.24.359-.66.48-1.021.24-2.82-1.74-6.36-2.101-10.561-1.141-.418.122-.779-.179-.899-.539-.12-.421.18-.78.54-.9 4.56-1.021 8.52-.6 11.64 1.32.42.18.479.659.301 1.02zm1.44-3.3c-.301.42-.841.6-1.262.3-3.239-1.98-8.159-2.58-11.939-1.38-.479.12-1.02-.12-1.14-.6-.12-.48.12-1.021.6-1.141C9.6 9.9 15 10.561 18.72 12.84c.361.181.54.78.241 1.2zm.12-3.36C15.24 8.4 8.82 8.16 5.16 9.301c-.6.179-1.2-.181-1.38-.721-.18-.601.18-1.2.72-1.381 4.26-1.26 11.28-1.02 15.721 1.621.539.3.719 1.02.419 1.56-.299.421-1.02.599-1.559.3z"/></svg>
+            <span class="logo-text">Spotify Playlist</span>
+        </div>
+        <a href="/" class="nav-item">
+            <svg viewBox="0 0 24 24"><path d="M12.5 3.247a1 1 0 0 0-1 0L4 7.577V20h4.5v-6a1 1 0 0 1 1-1h5a1 1 0 0 1 1 1v6H20V7.577l-7.5-4.33zm-2-1.732a3 3 0 0 1 3 0l7.5 4.33a2 2 0 0 1 1 1.732V21a1 1 0 0 1-1 1h-6.5a1 1 0 0 1-1-1v-6h-3v6a1 1 0 0 1-1 1H3a1 1 0 0 1-1-1V7.577a2 2 0 0 1 1-1.732l7.5-4.33z"/></svg>
+            Home
+        </a>
+        <a href="/playlist" class="nav-item active">
+            <svg viewBox="0 0 24 24"><path d="M3 6a1 1 0 0 1 1-1h16a1 1 0 1 1 0 2H4a1 1 0 0 1-1-1zm0 5a1 1 0 0 1 1-1h16a1 1 0 1 1 0 2H4a1 1 0 0 1-1-1zm1 4a1 1 0 1 0 0 2h10a1 1 0 1 0 0-2H4z"/></svg>
+            My Playlists
+        </a>
+        <a href="/song/allsong" class="nav-item">
+            <svg viewBox="0 0 24 24"><path d="M12 3v10.55A4 4 0 1 0 14 17V7h4V3h-6z"/></svg>
+            Songs
+        </a>
+    </nav>
 
-    <h2>Songs</h2>
-    <% if (playlist.songs.length === 0) { %>
-        <p>No songs yet.</p>
-    <% } else { %>
-        <% playlist.songs.forEach(song => { %>
-            <p>
-                Song ID: <%= song.song_id %>
+    <!-- Main -->
+    <main class="main">
+        <!-- Hero -->
+        <div class="hero">
+            <div class="hero-art">
+                <svg viewBox="0 0 24 24"><path d="M12 3v10.55A4 4 0 1 0 14 17V7h4V3h-6z"/></svg>
+            </div>
+            <div class="hero-info">
+                <div class="hero-type">Playlist</div>
+                <div class="hero-title"><%= playlist.PlayListName %></div>
+                <div class="hero-meta">
+                    <span><%= songs.length %></span> songs
+                </div>
+            </div>
+        </div>
 
-                <!-- Remove song -->
-                <form action="/playlist/<%= playlist.playList_id %>/songs/delete" method="POST">
-                    <input type="hidden" name="song_id" value="<%= song.song_id %>">
-                    <button type="submit">Remove</button>
-                </form>
-            </p>
-        <% }) %>
-    <% } %>
+        <!-- Controls -->
+        <div class="controls">
+            <a href="/playlist/<%= playlist.playList_id %>/addsong" class="btn-play" title="Add Song">
+                <svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
+            </a>
+            <a href="/playlist/<%= playlist.playList_id %>/addsong" class="btn-add">
+                <svg viewBox="0 0 24 24"><path d="M12 5v14M5 12h14" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"/></svg>
+                Add Songs
+            </a>
+            <a href="/playlist" style="color:var(--muted);text-decoration:none;font-size:14px;margin-left:auto;">← Back</a>
+        </div>
+
+        <!-- Song List -->
+        <div class="song-list">
+            <div class="song-list-header">
+                <div>#</div>
+                <div>Title</div>
+                <div>Category</div>
+                <div></div>
+            </div>
+
+            <% if (songs.length === 0) { %>
+                <div class="empty">
+                    <h3>No songs yet</h3>
+                    <p>Add songs to get started.</p>
+                </div>
+            <% } else { %>
+                <% songs.forEach((song, index) => { %>
+                    <% if (song) { %>
+                    <div class="song-row">
+                        <div class="song-num"><%= index + 1 %></div>
+                        <div class="song-info">
+                            <div class="song-name"><%= song.songname %></div>
+                            <div class="song-artist"><%= song.artist %></div>
+                        </div>
+                        <div class="song-category"><%= song.category %></div>
+                        <div class="song-actions">
+                            <a href="/playlist/remove/<%= playlist.playList_id %>/<%= song.song_id %>" class="btn-remove">Remove</a>
+                        </div>
+                    </div>
+                    <% } %>
+                <% }) %>
+            <% } %>
+        </div>
+    </main>
 
 </body>
 </html>

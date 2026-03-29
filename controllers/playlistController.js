@@ -2,6 +2,7 @@ const fs = require('fs/promises');
 
 // Get Service model
 const Playlist = require('./../model/playlistModel');
+const Song = require('../model/songModel');
 const e = require('express');
 
 async function renamePlaylist(new_name, user_id1, playList_id1){
@@ -71,7 +72,7 @@ exports.getAllPlaylist = async (req,res) =>{
     if (!req.session.user) return res.redirect('/user/login');
     const user_id = req.session.user.username;
         const playlists = await Playlist.retrieveByUserId(user_id);
-        res.render('/playlists/display', { playlists, user_id });
+        res.render('playlist/display', { playlists, user_id });
 }
 
 // show all songs to add to a playlist
@@ -110,6 +111,7 @@ exports.addSong = async (req, res) => {
     }
 };
 
+// playlistController.js - update getPlaylist
 exports.getPlaylist = async (req, res) => {
     if (!req.session.user) return res.redirect('/user/login');
     try {
@@ -117,7 +119,11 @@ exports.getPlaylist = async (req, res) => {
         const playlist = await Playlist.findByPlaylistId(playList_id);
         if (!playlist) return res.send('Playlist not found');
 
-        res.render('playlist/PlaylistDetails', { playlist });
+        const songDetails = await Promise.all(
+            playlist.songs.map(s => Song.findBySongId(s.song_id))
+        );
+
+        res.render('playlist/PlaylistDetails', { playlist, songs: songDetails });
     } catch (error) {
         console.error(error);
         res.send('Error loading playlist');
