@@ -67,7 +67,7 @@ exports.removeSong = async (req, res) => {
 
         const user_id = req.session.user.username;
         await Playlist.removeSongFromPlaylist(playList_id, user_id, song_id);
-        const user_id = "testuser1";
+        
 await Playlist.removeSongFromPlaylist(playList_id, req.session.user.user_id, song_id);
         res.redirect(`/playlist/remove/${playList_id}`);
     } catch (error) {
