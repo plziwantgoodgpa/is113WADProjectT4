@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Edit Profile | Spotify</title>
+
+    <link rel="stylesheet" href="/css/style.css">
+    <link rel="stylesheet" href="/css/songForm.css">
+</head>
+<body>
+
+    <nav class="navbar">
+        <a href="/" class="nav-brand">🎵 Spotify</a>
+
+        <div class="nav-links">
+            <a href="/song/allsong">Songs</a>
+            <a href="/category/allCategory">Categories</a>
+            <a href="/playlist">Playlists</a>
+
+            <% if (!user) { %>
+                <a href="/user/login" class="btn btn-outline">Log in</a>
+            <% } else { %>
+                <a href="/user/profile" class="btn">Profile (<%= user.username %>)</a>
+                <a href="/user/logout" class="btn btn-outline">Log out</a>
+            <% } %>
+        </div>
+    </nav>
+
+    <div class="container">
+
+        <div class="page-header">
+            <h1>Edit Profile</h1>
+            <a href="/user/profile" class="btn btn-outline">← Back to Profile</a>
+        </div>
+
+        <div class="content-box">
+            <form action="/user/edit" method="POST" class="custom-form">
+
+                <div class="form-group">
+                    <label>Email</label>
+                    <input type="email" name="email" value="<%= user.email %>" required>
+                </div>
+
+                <div class="form-group">
+                    <label>Bio</label>
+                    <textarea name="bio" rows="4"><%= user.bio %></textarea>
+                </div>
+
+                <button type="submit" class="btn">Update Profile</button>
+
+            </form>
+        </div>
+
+    </div>
+
+</body>
+</html>

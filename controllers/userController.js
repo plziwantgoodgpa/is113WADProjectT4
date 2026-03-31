@@ -50,3 +50,65 @@ exports.loginPost = async (req, res) =>{
         res.redirect('/user/login')
     }
 };
+exports.showEditUser = async (req, res) => {
+    try {
+        if (!req.session.user) return res.redirect('/user/login');
+
+        const username = req.session.user.username;
+        const user = await User.findUser(username);
+
+        if (!user) {
+            return res.send('User not found');
+        }
+
+        res.render('user/editUser', { user });
+    } catch (error) {
+        console.error(error);
+        res.send('Error loading edit profile page');
+    }
+};
+
+exports.editUser = async (req, res) => {
+    try {
+        if (!req.session.user) return res.redirect('/user/login');
+
+        const username = req.session.user.username;
+        const { email, bio } = req.body;
+
+        const updatedUser = await User.updateUserProfile(username, {
+            email: email,
+            bio: bio
+        });
+
+        if (!updatedUser) {
+            return res.send('User not found');
+        }
+
+        // update session with new email
+        req.session.user.email = updatedUser.email;
+
+        res.redirect('/');
+    } catch (error) {
+        console.error(error);
+        res.send('Error updating user');
+    }
+};
+
+exports.showProfile = async (req, res) => {
+    try {
+        if (!req.session.user) return res.redirect('/user/login');
+
+        const username = req.session.user.username;
+        const user = await User.findUser(username);
+
+        if (!user) {
+            return res.send('User not found');
+        }
+
+        console.log('RENDERING PROFILE PAGE NOW');
+        res.render('user/profile', { user });
+    } catch (error) {
+        console.error(error);
+        res.send('Error loading profile');
+    }
+};

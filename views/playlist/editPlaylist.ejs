@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Create Playlist | Spotify</title>
+    <title>Edit Playlist | Spotify</title>
 
     <link rel="stylesheet" href="/css/style.css">
     <link rel="stylesheet" href="/css/songForm.css">
@@ -25,19 +25,19 @@
     <div class="container">
 
         <div class="page-header">
-            <h1>Create Playlist</h1>
-            <a href="/playlist" class="btn btn-outline">← Back to Playlists</a>
+            <h1>Edit Playlist</h1>
+            <a href="/playlist/<%= playlist.playList_id %>" class="btn btn-outline">← Back to Playlist</a>
         </div>
 
         <div class="content-box">
-            <form action="/playlist/create" method="POST" class="custom-form">
+            <form action="/playlist/edit/<%= playlist.playList_id %>" method="POST" class="custom-form">
 
                 <div class="form-group">
                     <label>Playlist Name</label>
-                    <input type="text" name="PlayListName" required>
+                    <input type="text" name="PlayListName" value="<%= playlist.PlayListName %>" required>
                 </div>
 
-                <button type="submit" class="btn">Create Playlist</button>
+                <button type="submit" class="btn">Update Playlist</button>
             </form>
         </div>
 

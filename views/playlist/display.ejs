@@ -1,25 +1,67 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <title>My Playlists</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Playlists | Spotify</title>
+
+    <link rel="stylesheet" href="/css/style.css">
+    <link rel="stylesheet" href="/css/songTable.css">
 </head>
 <body>
 
-    <h1>My Playlists</h1>
-    <a href="/playlist/create">+ Create Playlist</a>  
+    <nav class="navbar">
+        <a href="/" class="nav-brand">🎵 Spotify</a>
 
-    <% if (playlists.length === 0) { %>
-        <p>You have no playlists yet.</p>
-    <% } else { %>
-        <% playlists.forEach(playlist => { %>
-            <p>
-                <a href="/playlist/<%= playlist.playList_id %>">
-                    <%= playlist.PlayListName %>
-                </a>
-            </p>
-        <% }) %>
-    <% } %>
+        <div class="nav-links">
+            <a href="/song/allsong">Songs</a>
+            <a href="/category/allCategory">Categories</a>
+            <a href="/playlist" style="color: #ffffff;">Playlists</a>
 
+            <% if (!user_id) { %>
+                <a href="/user/login" class="btn btn-outline">Log in</a>
+            <% } else { %>
+                <a href="/user/profile" class="btn">Profile</a>
+                <a href="/user/logout" class="btn btn-outline">Log out</a>
+            <% } %>
+        </div>
+    </nav>
+
+    <div class="container">
+        <div class="page-header">
+            <h1>My Playlists</h1>
+            <a href="/playlist/create" class="btn">+ Create Playlist</a>
+        </div>
+
+        <% if (playlists.length === 0) { %>
+            <div class="empty-state">
+                <p>You have no playlists yet.</p>
+            </div>
+        <% } else { %>
+            <table class="song-table">
+                <thead>
+                    <tr>
+                        <th>Playlist Name</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <% playlists.forEach(function(playlist) { %>
+                        <tr>
+                            <td>
+                                <strong><%= playlist.PlayListName %></strong>
+                            </td>
+                            <td>
+                                <a href="/playlist/<%= playlist.playList_id %>" class="btn btn-outline btn-small">View</a>
+                                <a href="/playlist/edit/<%= playlist.playList_id %>" class="btn btn-outline btn-small">Edit</a>
+                                <a href="/playlist/delete/<%= playlist.playList_id %>" class="btn btn-small" style="background-color: #e74c3c;" onclick="return confirm('Delete this playlist?')">Delete</a>
+                            </td>
+                        </tr>
+                    <% }) %>
+                </tbody>
+            </table>
+        <% } %>
+    </div>
 
 </body>
 </html>

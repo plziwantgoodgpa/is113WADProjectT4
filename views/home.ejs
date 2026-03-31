@@ -19,7 +19,8 @@
             <% if (!user || user == "Not logged in") { %>
                 <a href="/user/login" class="btn btn-outline">Log in</a>
                 <% } else { %>
-                <a href="/user/profile?username=<%= user.username %>" class="btn">Profile (<%= user.username %>)</a>
+                <a href="/user/profile" class="btn">Profile (<%= user.username %>)</a>
+                
                 <a href="/user/logout" class="btn btn-outline">Log out</a>
             <% } %>
         </div>

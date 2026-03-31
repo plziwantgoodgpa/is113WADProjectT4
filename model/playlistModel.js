@@ -100,3 +100,15 @@ exports.addSongToPlaylist = async (playList_id, user_id, song_id) => {
         return null;
     }
 };
+exports.updatePlaylistName = async (playList_id, user_id, new_name) => {
+    try {
+        return await Playlist.findOneAndUpdate(
+            { playList_id: playList_id, user_id: user_id },
+            { $set: { PlayListName: new_name } },
+            { new: true }
+        );
+    } catch (error) {
+        console.error(error);
+        return null;
+    }
+};

@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>User Profile | Spotify</title>
+    <link rel="stylesheet" href="/css/style.css">
+    <link rel="stylesheet" href="/css/songDetailPage.css">
+    <link rel="stylesheet" href="/css/songTable.css">
+</head>
+<body>
+
+    <nav class="navbar">
+        <a href="/" class="nav-brand">🎵 Spotify</a>
+
+        <div class="nav-links">
+            <a href="/song/allsong">Songs</a>
+            <a href="/category/allCategory">Categories</a>
+            <a href="/playlist">Playlists</a>
+
+            <% if (!user) { %>
+                <a href="/user/login" class="btn btn-outline">Log in</a>
+            <% } else { %>
+                <a href="/user/profile" class="btn">Profile (<%= user.username %>)</a>
+                <a href="/user/logout" class="btn btn-outline">Log out</a>
+            <% } %>
+        </div>
+    </nav>
+
+    <div class="container">
+        <div class="page-header">
+            <h1>User Profile</h1>
+            <a href="/" class="btn btn-outline">← Back Home</a>
+        </div>
+
+        <div class="content-box">
+            <table class="info-table">
+                <tr>
+                    <th>Username</th>
+                    <td><strong style="font-size: 1.2em;"><%= user.username %></strong></td>
+                </tr>
+                <tr>
+                    <th>Email</th>
+                    <td><%= user.email %></td>
+                </tr>
+                <tr>
+                    <th>Bio</th>
+                    <td>
+                        <% if (user.bio && user.bio.trim() !== '') { %>
+                            <%= user.bio %>
+                        <% } else { %>
+                            <span style="color: #b3b3b3;">No bio added yet.</span>
+                        <% } %>
+                    </td>
+                </tr>
+            </table>
+
+            <div class="admin-controls" style="margin-top: 20px; padding-top: 20px; border-top: 1px solid #333;">
+                <a href="/user/edit" class="btn">Edit Profile</a>
+            </div>
+        </div>
+    </div>
+
+</body>
+</html>

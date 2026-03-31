@@ -1,31 +1,71 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-    <title>Remove Song</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Remove Song | Spotify</title>
+
+    <link rel="stylesheet" href="/css/style.css">
+    <link rel="stylesheet" href="/css/songTable.css">
 </head>
 <body>
 
-<h1>Remove Song from Playlist</h1>
+    <nav class="navbar">
+        <a href="/" class="nav-brand">🎵 Spotify</a>
 
-<h2><%= playlist.PlayListName %></h2>
+        <div class="nav-links">
+            <a href="/song/allsong">Songs</a>
+            <a href="/category/allCategory">Categories</a>
+            <a href="/playlist" style="color: #ffffff;">Playlists</a>
+            <a href="/user/profile" class="btn">Profile</a>
+            <a href="/user/logout" class="btn btn-outline">Log out</a>
+        </div>
+    </nav>
 
-<% if (playlist.songs.length === 0) { %>
-    <p>No songs in this playlist.</p>
-<% } else { %>
-    <ul>
-        <% playlist.songs.forEach(function(song) { %>
-            <li>
-                Song ID: <%= song.song_id %>
-                <a href="/playlist/remove/<%= playlist.playList_id %>/<%= song.song_id %>">
-                    Remove
-                </a>
-            </li>
-        <% }) %>
-    </ul>
-<% } %>
+    <div class="container">
+        <div class="page-header">
+            <h1>Remove Song from Playlist</h1>
+            <a href="/playlist/<%= playlist.playList_id %>" class="btn btn-outline">← Back to Playlist</a>
+        </div>
 
-<br>
-<a href="/playlist">Back</a>
+        <div class="content-box">
+            <table class="info-table">
+                <tr>
+                    <th>Playlist Name</th>
+                    <td><strong style="font-size: 1.2em;"><%= playlist.PlayListName %></strong></td>
+                </tr>
+            </table>
+        </div>
+
+        <br>
+
+        <% if (playlist.songs.length === 0) { %>
+            <div class="empty-state">
+                <p>No songs in this playlist.</p>
+            </div>
+        <% } else { %>
+            <table class="song-table">
+                <thead>
+                    <tr>
+                        <th>Song ID</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <% playlist.songs.forEach(function(song) { %>
+                        <tr>
+                            <td><%= song.song_id %></td>
+                            <td>
+                                <a href="/playlist/remove/<%= playlist.playList_id %>/<%= song.song_id %>" class="btn btn-outline btn-small">
+                                    Remove
+                                </a>
+                            </td>
+                        </tr>
+                    <% }) %>
+                </tbody>
+            </table>
+        <% } %>
+    </div>
 
 </body>
 </html>

@@ -1,39 +1,66 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-    <title>Add Song to <%= playlist.PlayListName %></title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Add Song to <%= playlist.PlayListName %> | Spotify</title>
+
+    <link rel="stylesheet" href="/css/style.css">
+    <link rel="stylesheet" href="/css/songTable.css">
 </head>
 <body>
 
-<h1>Add Song to "<%= playlist.PlayListName %>"</h1>
+    <nav class="navbar">
+        <a href="/" class="nav-brand">🎵 Spotify</a>
 
-<% if (songs.length === 0) { %>
-    <p>No songs available.</p>
-<% } else { %>
-    <table>
-        <tr>
-            <th>Song</th>
-            <th>Artist</th>
-            <th>Category</th>
-            <th>Action</th>
-        </tr>
-        <% songs.forEach(song => { %>
-            <tr>
-                <td><%= song.songname %></td>
-                <td><%= song.artist %></td>
-                <td><%= song.category %></td>
-                <td>
-                    <a href="/playlist/<%= playlist.playList_id %>/addsong/<%= song.song_id %>">
-                        + Add
-                    </a>
-                </td>
-            </tr>
-        <% }) %>
-    </table>
-<% } %>
+        <div class="nav-links">
+            <a href="/song/allsong">Songs</a>
+            <a href="/category/allCategory">Categories</a>
+            <a href="/playlist" style="color: #ffffff;">Playlists</a>
+            <a href="/user/profile" class="btn">Profile</a>
+            <a href="/user/logout" class="btn btn-outline">Log out</a>
+        </div>
+    </nav>
 
-<br>
-<a href="/playlist/<%= playlist.playList_id %>">Back to Playlist</a>
+    <div class="container">
+
+        <div class="page-header">
+            <h1>Add Song to "<%= playlist.PlayListName %>"</h1>
+            <a href="/playlist/<%= playlist.playList_id %>" class="btn btn-outline">← Back to Playlist</a>
+        </div>
+
+        <% if (songs.length === 0) { %>
+            <div class="empty-state">
+                <p>No songs available.</p>
+            </div>
+        <% } else { %>
+            <table class="song-table">
+                <thead>
+                    <tr>
+                        <th>Song</th>
+                        <th>Artist</th>
+                        <th>Category</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <% songs.forEach(function(song) { %>
+                        <tr>
+                            <td><strong><%= song.songname %></strong></td>
+                            <td><%= song.artist %></td>
+                            <td><span class="category-badge"><%= song.category %></span></td>
+                            <td>
+                                <a href="/playlist/<%= playlist.playList_id %>/addsong/<%= song.song_id %>" class="btn btn-outline btn-small">
+                                    + Add
+                                </a>
+                            </td>
+                        </tr>
+                    <% }) %>
+                </tbody>
+            </table>
+        <% } %>
+
+    </div>
 
 </body>
 </html>

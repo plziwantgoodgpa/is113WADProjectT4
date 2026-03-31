@@ -41,7 +41,7 @@ exports.createPlaylist = async (req, res) => {
 
 exports.showRemoveSongPage = async (req, res) => {
     try {
-        const playList_id = parseInt(req.params.id);
+        const playList_id = req.params.id;
         const playlist = await Playlist.findByPlaylistId(playList_id);
 
         if (!playlist) {
@@ -56,11 +56,11 @@ exports.showRemoveSongPage = async (req, res) => {
 
 exports.removeSong = async (req, res) => {
     try {
-        const playList_id = parseInt(req.params.playlistId);
+        const playList_id = req.params.playlistId;
         const song_id = parseInt(req.params.songId);
 
-        const user_id = "testuser1";
-await Playlist.removeSongFromPlaylist(playList_id, req.body.user_id, song_id);
+        const user_id = req.session.user.username;
+        await Playlist.removeSongFromPlaylist(playList_id, user_id, song_id);
         res.redirect(`/playlist/remove/${playList_id}`);
     } catch (error) {
         res.send('Error removing song');
@@ -71,7 +71,7 @@ exports.getAllPlaylist = async (req,res) =>{
     if (!req.session.user) return res.redirect('/user/login');
     const user_id = req.session.user.username;
         const playlists = await Playlist.retrieveByUserId(user_id);
-        res.render('/playlists/display', { playlists, user_id });
+        res.render('playlist/display', { playlists, user_id });
 }
 
 // show all songs to add to a playlist
@@ -121,5 +121,53 @@ exports.getPlaylist = async (req, res) => {
     } catch (error) {
         console.error(error);
         res.send('Error loading playlist');
+    }
+};
+exports.deletePlaylist = async (req, res) => {
+    try {
+        if (!req.session.user) return res.redirect('/user/login');
+
+        const playList_id = req.params.id;
+        const user_id = req.session.user.username;
+
+        await Playlist.deletePlaylist(playList_id, user_id);
+
+        res.redirect('/playlist');
+    } catch (error) {
+        console.error(error);
+        res.send('Error deleting playlist');
+    }
+};
+exports.showEditPlaylist = async (req, res) => {
+    try {
+        if (!req.session.user) return res.redirect('/user/login');
+
+        const playList_id = req.params.id;
+        const playlist = await Playlist.findByPlaylistId(playList_id);
+
+        if (!playlist) {
+            return res.send('Playlist not found');
+        }
+
+        res.render('playlist/editPlaylist', { playlist });
+    } catch (error) {
+        console.error(error);
+        res.send('Error loading edit playlist page');
+    }
+};
+exports.editPlaylist = async (req, res) => {
+    try {
+        if (!req.session.user) return res.redirect('/user/login');
+
+        const playList_id = req.params.id;
+        const user_id = req.session.user.username;
+        const new_name = req.body.PlayListName;
+
+        await Playlist.updatePlaylistName(playList_id, user_id, new_name);
+
+        res.redirect(`/playlist/${playList_id}`);
+    } catch (error) {
+        console.error(error);
+        res.send('Error updating playlist');
     }
 };

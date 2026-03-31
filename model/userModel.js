@@ -15,6 +15,10 @@ const userSchema = new mongoose.Schema({
         required: [true, 'A user must have an email'],
         unique: true
     },
+    bio: {
+    type: String,
+    default: ''
+    },
     user_role: {
         type: String,
         required: [true, 'A user must have a role'],
@@ -37,5 +41,13 @@ exports.findUser = function(username) {
 // add this to userModel.js
 exports.addUser = function(userData) {
     return User.create(userData);
+};
+
+exports.updateUserProfile = function(username, updatedData) {
+    return User.findOneAndUpdate(
+        { username: username },
+        updatedData,
+        { returnDocument: 'after', runValidators: true }
+    );
 };
 
