@@ -74,7 +74,7 @@
                 
                 <% if (typeof userRole !== 'undefined' && userRole == "admin") { %>
                     <div class="admin-controls" style="margin-top: 20px; padding-top: 20px; border-top: 1px solid #333;">
-                        <a href="/song/editSong?songID=<%= song.song_id %>" class="btn btn-outline">Edit Song</a>
+                        <a href="/song/editSong?songID=<%= song.song_id %>" class="btn btn-outline">Edit Song</a><br>
                         <a href="/song/deleteSong?songID=<%= song.song_id %>" class="btn" style="background-color: #e74c3c;" onclick="return confirm('Delete this song?');">Delete Song</a>
                     </div>
                 <% } %>
@@ -118,14 +118,15 @@
                                     </div>
                                 </details>
                                 <br>
-                                <details>
+                                <details class="delete-confirmation">
                                     <summary class="delete-btn">Delete Your Review</summary>
 
                                     <div style="margin-top: 15px;">
                                         <form action="/review/delete-review" method="POST" style="margin-top: 15px;">
                                             <input type="hidden" name="song_id" value="<%= song.song_id %>">
+                                            <p style="font-size: 0.9em; color: #b3b3b3; margin-bottom: 10px;">Are you sure you want to permanently delete you review?</p>
                                             <button type="submit" class="delete-btn">
-                                                Confirm Delete Review
+                                                Confirm Permanent Delete
                                             </button>
                                         </form>
                                     </div>
