@@ -1,5 +1,6 @@
 const CategoryModel = require('../model/categoryModel');
 const SongModel = require('../model/songModel');
+const ReviewModel = require('../model/reviewModel')
 exports.getAllCategories = async (req, res) => {
     let user_role = undefined;
     let username = undefined;
@@ -116,7 +117,24 @@ exports.displayCatDetail = async (req, res) => {
         // 3. Fetch ONLY the songs that belong to this category
         // Note: Change 'findSongsByCategory' to whatever your SongModel method is named!
         let filteredSongs = await SongModel.findSongsByCat(categoryID);
-
+        for (i = 0; i < filteredSongs.length; i++) {
+            let currentSong = filteredSongs[i]
+            let reviews = await ReviewModel.findBySongId(currentSong.song_id);
+            let averageRating = 0
+            if (reviews.length > 0) {
+                let total = 0;
+                for (let review of reviews) {
+                    total += review.rating;
+                }
+                averageRating = total / reviews.length;
+            }
+            filteredSongs[i].averageRating = averageRating
+        }
+        for (i = 0; i < filteredSongs.length; i++) {
+            if (filteredSongs[i].averageRating == 0) {
+                filteredSongs[i].averageRating = "No ratings yet"
+            }
+        }
         // 4. Render a new page and pass the data over
         res.render("category/catDetail", {
             category: category,
@@ -127,6 +145,6 @@ exports.displayCatDetail = async (req, res) => {
 
     } catch (error) {
         console.error("Error loading songs for this category:", error);
-        res.status(500).send("Error loading the playlist.");
+        res.status(500).send("Error loading the category.");
     }
 };

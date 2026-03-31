@@ -25,6 +25,15 @@ const songSchema = new mongoose.Schema({
     description: {
         type: String,
         required: [true, 'A song must have a description']
+    },
+
+       view_count: {
+        type: Number },
+
+    views: {
+        type: Number, 
+        required: [true, 'A song msut have a view'],
+        default: 0
     }
 });
 
@@ -90,6 +99,7 @@ exports.searchSongs = function(searchTerm) {
         ]
     });
 };
+// whyy got '$'
 
 exports.findSongsByCat = async (categoryID) => {
     try {
@@ -104,3 +114,18 @@ exports.findSongsByCat = async (categoryID) => {
         throw error; // Tosses the error back to the controller so your app doesn't crash
     }
 };
+
+
+exports.incrementViewCount = function(song_id) {
+    return Song.updateOne(
+        { song_id: song_id },
+        { $inc: { view_count: 1 } }
+    );
+};
+
+exports.getPopularSongs = function() {
+    return Song.find().sort({ view_count: -1, songname: 1 });
+};
+exports.incrementViews = async(req, res) => {
+
+} 

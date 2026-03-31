@@ -80,23 +80,30 @@
                     <table class="song-table">
                         <thead>
                             <tr>
-                                <th>ID</th>
                                 <th>Song Name</th>
                                 <th>Artist</th>
+                                <th>Rating</th>
                                 <th>Action</th>
                             </tr>
                         </thead>
                         <tbody>
                             <% songs.forEach(function(song) { %>
                                 <tr>
-                                    <td>
-                                        <%= song.song_id %>
-                                    </td>
+
                                     <td><strong>
                                             <%= song.songname %>
                                         </strong></td>
                                     <td>
                                         <%= song.artist %>
+                                    </td>
+                                    <td>
+                                        <span class="rating-badge">
+                                            <% if (song.averageRating !="No ratings yet" ) { %>
+                                                ⭐ <%= song.averageRating.toFixed(1) %> / 5.0
+                                                    <% } else { %>
+                                                        No ratings yet
+                                                        <% } %>
+                                        </span>
                                     </td>
                                     <td>
                                         <a href="/song/songDetail?songID=<%= song.song_id %>"

@@ -1,10 +1,11 @@
 const reviewModel = require('../model/reviewModel');
 const songModel = require('../model/songModel');
 
-exports.addReview = async function(req, res) {
+exports.addReview = async function (req, res) {
     const song_id = parseInt(req.body.song_id);
-    const rawReviewMessage = req.body.reviewMessage;
     const rating = parseInt(req.body.rating);
+    const rawReviewMessage = req.body.reviewMessage;
+
     let reviewMessage = "";
     let errors = [];
 
@@ -19,7 +20,7 @@ exports.addReview = async function(req, res) {
         reviewMessage = rawReviewMessage.trim();
     }
 
-    if (username==undefined) {
+    if (username == undefined) {
         errors.push("Please log in before adding a review.");
     }
 
@@ -66,19 +67,26 @@ exports.addReview = async function(req, res) {
     res.redirect('/song/songDetail?songID=' + song_id);
 };
 
-exports.editReview = async function(req, res) {
+exports.editReview = async function (req, res) {
     const song_id = parseInt(req.body.song_id);
     const rawReviewMessage = req.body.reviewMessage;
     const rating = parseInt(req.body.rating);
 
     let reviewMessage = "";
     let errors = [];
+    let user_role = undefined;
+    let username = undefined;
+
+    if (req.session.user != undefined) {
+        user_role = req.session.user.role;
+        username = req.session.user.username;
+    }
 
     if (rawReviewMessage !== undefined) {
         reviewMessage = rawReviewMessage.trim();
     }
 
-    if (!req.session.user_id) {
+    if (!username) {
         errors.push("Please log in before editing a review.");
     }
 
@@ -92,7 +100,7 @@ exports.editReview = async function(req, res) {
 
     const song = await songModel.findBySongId(song_id);
     const reviews = await reviewModel.findBySongId(song_id);
-    const userReview = await reviewModel.findOneReview(song_id, req.session.user_id);
+    const userReview = await reviewModel.findOneReview(song_id, req.session.username);
 
     if (errors.length > 0) {
         return res.render('song/songDetail', {
@@ -105,11 +113,11 @@ exports.editReview = async function(req, res) {
                 rating: req.body.rating,
                 reviewMessage: reviewMessage
             },
-            user_id: req.session.user_id || null
+            username: username
         });
     }
 
-    await reviewModel.editReview(song_id, req.session.user_id, {
+    await reviewModel.editReview(song_id, username, {
         rating: rating,
         reviewMessage: reviewMessage,
         review_date_time: new Date()
@@ -118,16 +126,22 @@ exports.editReview = async function(req, res) {
     res.redirect('/song/songDetail?songID=' + song_id);
 };
 
-exports.deleteReview = async function(req, res) {
+exports.deleteReview = async function (req, res) {
     const song_id = parseInt(req.body.song_id);
 
-    if (!req.session.user_id) {
+    if (req.session.user != undefined) {
+        user_role = req.session.user.role;
+        username = req.session.user.username;
+    }
+
+    if (!username) {
         return res.redirect('/song/songDetail?songID=' + song_id);
     }
 
-    await reviewModel.deleteReview(song_id, req.session.user_id);
+    await reviewModel.deleteReview(song_id, username);
 
     res.redirect('/song/songDetail?songID=' + song_id);
+    console.log("review deleted")
 };
 
 function calculateAverageRating(reviews) {

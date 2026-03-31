@@ -112,3 +112,13 @@ exports.showProfile = async (req, res) => {
         res.send('Error loading profile');
     }
 };
+
+exports.logout = (req, res) => {
+    req.session.destroy((err) => {
+        if (err) {
+            console.error(err);
+            return res.send('Error logging out');
+        }
+        res.redirect('/');
+    });
+};

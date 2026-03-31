@@ -2,6 +2,7 @@ const fs = require('fs/promises');
 
 // Get Service model
 const Playlist = require('./../model/playlistModel');
+const Song = require('../model/songModel');
 const e = require('express');
 
 async function renamePlaylist(new_name, user_id1, playList_id1){
@@ -48,7 +49,12 @@ exports.showRemoveSongPage = async (req, res) => {
             return res.send('Playlist not found');
         }
 
-        res.render('playlist/removeSong', { playlist });
+        //retrieves all the songs from song database
+        const songDetails = await Promise.all(
+            playlist.songs.map(s => Song.findBySongId(s.song_id))
+        );
+
+        res.render('playlist/removeSong', {playlist, songs: songDetails });
     } catch (error) {
         res.send('Error loading playlist');
     }
@@ -61,6 +67,8 @@ exports.removeSong = async (req, res) => {
 
         const user_id = req.session.user.username;
         await Playlist.removeSongFromPlaylist(playList_id, user_id, song_id);
+        const user_id = "testuser1";
+await Playlist.removeSongFromPlaylist(playList_id, req.session.user.user_id, song_id);
         res.redirect(`/playlist/remove/${playList_id}`);
     } catch (error) {
         res.send('Error removing song');
@@ -110,14 +118,19 @@ exports.addSong = async (req, res) => {
     }
 };
 
+// playlistController.js - update getPlaylist
 exports.getPlaylist = async (req, res) => {
     if (!req.session.user) return res.redirect('/user/login');
     try {
         const playList_id = req.params.id;
         const playlist = await Playlist.findByPlaylistId(playList_id);
         if (!playlist) return res.send('Playlist not found');
+        //retrieves all the songs from song database
+        const songDetails = await Promise.all(
+            playlist.songs.map(s => Song.findBySongId(s.song_id))
+        );
 
-        res.render('playlist/PlaylistDetails', { playlist });
+        res.render('playlist/PlaylistDetails', { playlist, songs: songDetails });
     } catch (error) {
         console.error(error);
         res.send('Error loading playlist');
