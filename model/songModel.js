@@ -25,6 +25,11 @@ const songSchema = new mongoose.Schema({
     description: {
         type: String,
         required: [true, 'A song must have a description']
+    },
+    views: {
+        type: Number, 
+        required: [true, 'A song msut have a view'],
+        default: 0
     }
 });
 
@@ -90,6 +95,7 @@ exports.searchSongs = function(searchTerm) {
         ]
     });
 };
+// whyy got '$'
 
 exports.findSongsByCat = async (categoryID) => {
     try {
@@ -104,3 +110,7 @@ exports.findSongsByCat = async (categoryID) => {
         throw error; // Tosses the error back to the controller so your app doesn't crash
     }
 };
+
+exports.incrementViews = async(req, res) => {
+
+} 
