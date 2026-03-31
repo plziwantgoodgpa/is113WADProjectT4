@@ -42,14 +42,19 @@ exports.createPlaylist = async (req, res) => {
 
 exports.showRemoveSongPage = async (req, res) => {
     try {
-        const playList_id = parseInt(req.params.id);
+        const playList_id = req.params.id;
         const playlist = await Playlist.findByPlaylistId(playList_id);
 
         if (!playlist) {
             return res.send('Playlist not found');
         }
 
-        res.render('playlist/removeSong', { playlist });
+        //retrieves all the songs from song database
+        const songDetails = await Promise.all(
+            playlist.songs.map(s => Song.findBySongId(s.song_id))
+        );
+
+        res.render('playlist/removeSong', {playlist, songs: songDetails });
     } catch (error) {
         res.send('Error loading playlist');
     }
@@ -57,11 +62,11 @@ exports.showRemoveSongPage = async (req, res) => {
 
 exports.removeSong = async (req, res) => {
     try {
-        const playList_id = parseInt(req.params.playlistId);
+        const playList_id = req.params.playlistId;
         const song_id = parseInt(req.params.songId);
 
         const user_id = "testuser1";
-await Playlist.removeSongFromPlaylist(playList_id, req.body.user_id, song_id);
+await Playlist.removeSongFromPlaylist(playList_id, req.session.user.user_id, song_id);
         res.redirect(`/playlist/remove/${playList_id}`);
     } catch (error) {
         res.send('Error removing song');
@@ -118,7 +123,7 @@ exports.getPlaylist = async (req, res) => {
         const playList_id = req.params.id;
         const playlist = await Playlist.findByPlaylistId(playList_id);
         if (!playlist) return res.send('Playlist not found');
-
+        //retrieves all the songs from song database
         const songDetails = await Promise.all(
             playlist.songs.map(s => Song.findBySongId(s.song_id))
         );

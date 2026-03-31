@@ -9,12 +9,13 @@
 
 <h2><%= playlist.PlayListName %></h2>
 
-<% if (playlist.songs.length === 0) { %>
+<% if (songs.length === 0) { %>
     <p>No songs in this playlist.</p>
 <% } else { %>
     <ul>
-        <% playlist.songs.forEach(function(song) { %>
+        <% songs.forEach(function(song) { %>
             <li>
+                Song Name: <%= song.songname %><br>
                 Song ID: <%= song.song_id %>
                 <a href="/playlist/remove/<%= playlist.playList_id %>/<%= song.song_id %>">
                     Remove
