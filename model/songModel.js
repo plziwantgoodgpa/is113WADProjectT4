@@ -28,7 +28,11 @@ const songSchema = new mongoose.Schema({
     },
 
        view_count: {
-        type: Number,
+        type: Number },
+
+    views: {
+        type: Number, 
+        required: [true, 'A song msut have a view'],
         default: 0
     }
 });
@@ -95,6 +99,7 @@ exports.searchSongs = function(searchTerm) {
         ]
     });
 };
+// whyy got '$'
 
 exports.findSongsByCat = async (categoryID) => {
     try {
@@ -121,3 +126,6 @@ exports.incrementViewCount = function(song_id) {
 exports.getPopularSongs = function() {
     return Song.find().sort({ view_count: -1, songname: 1 });
 };
+exports.incrementViews = async(req, res) => {
+
+} 
