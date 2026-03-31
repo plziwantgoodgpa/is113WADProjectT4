@@ -60,17 +60,20 @@ exports.getAllSongs = async (req, res) => {
 exports.songDetail = async function (req, res) {
     const songID = parseInt(req.query.songID);
 
+    await SongModel.incrementViewCount(songID);
+
     const song = await SongModel.findBySongId(songID);
     const reviews = await ReviewModel.findBySongId(songID);
-    let user_role = undefined
-    let username = undefined
+
+    let user_role = undefined;
+    let username = undefined;
+
     if (req.session.user != undefined) {
-        user_role = req.session.user.role
-        username = req.session.user.username
+        user_role = req.session.user.role;
+        username = req.session.user.username;
     }
 
     let userReview = null;
-    console.log("user is " + username)
     if (username) {
         userReview = await ReviewModel.findOneReview(songID, username);
     }
@@ -84,21 +87,19 @@ exports.songDetail = async function (req, res) {
         averageRating = total / reviews.length;
     }
 
- 
-        res.render("song/songDetail", {
-            song: song,
-            reviews: reviews,
-            username: username,
-            userRole: user_role,
-            userReview: userReview,
-            averageRating: averageRating,
-            error: "",
-            formData: {
-                rating: "",
-                reviewMessage: ""
-            }
-        });
-  
+    res.render("song/songDetail", {
+        song: song,
+        reviews: reviews,
+        username: username,
+        userRole: user_role,
+        userReview: userReview,
+        averageRating: averageRating,
+        error: "",
+        formData: {
+            rating: "",
+            reviewMessage: ""
+        }
+    });
 };
 
 
@@ -295,7 +296,50 @@ exports.searchSongs = async (req, res) => {
     }
 };
 
+// VIEWS 
 
+
+exports.getPopularSongs = async (req, res) => {
+    let user_role = undefined;
+    let username = undefined;
+
+    if (req.session.user != undefined) {
+        user_role = req.session.user.role;
+        username = req.session.user.username;
+    }
+
+    try {
+        let songs = await SongModel.getPopularSongs();
+
+        for (i = 0; i < songs.length; i++) {
+            let currentSong = songs[i];
+            let reviews = await ReviewModel.findBySongId(currentSong.song_id);
+            let averageRating = 0;
+
+            if (reviews.length > 0) {
+                let total = 0;
+                for (let review of reviews) {
+                    total += review.rating;
+                }
+                averageRating = total / reviews.length;
+            }
+
+            songs[i].averageRating = averageRating;
+        }
+
+        for (i = 0; i < songs.length; i++) {
+            if (songs[i].averageRating == 0) {
+                songs[i].averageRating = "No ratings yet";
+            }
+        }
+
+        res.render("song/popularSong", { songs, user_role, username });
+
+    } catch (error) {
+        console.error(error);
+        res.send("Error loading popular songs");
+    }
+};
 
 
 

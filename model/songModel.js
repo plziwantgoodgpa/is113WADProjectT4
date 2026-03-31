@@ -25,6 +25,11 @@ const songSchema = new mongoose.Schema({
     description: {
         type: String,
         required: [true, 'A song must have a description']
+    },
+
+       view_count: {
+        type: Number,
+        default: 0
     }
 });
 
@@ -103,4 +108,16 @@ exports.findSongsByCat = async (categoryID) => {
         console.error("MongoDB Error in findSongsByCategory:", error);
         throw error; // Tosses the error back to the controller so your app doesn't crash
     }
+};
+
+
+exports.incrementViewCount = function(song_id) {
+    return Song.updateOne(
+        { song_id: song_id },
+        { $inc: { view_count: 1 } }
+    );
+};
+
+exports.getPopularSongs = function() {
+    return Song.find().sort({ view_count: -1, songname: 1 });
 };

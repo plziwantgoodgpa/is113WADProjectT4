@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Popular Songs</title>
+    <link rel="stylesheet" href="/css/style.css">
+    <link rel="stylesheet" href="/css/songTable.css">
+</head>
+<body>
+
+    <nav class="navbar">
+        <a href="/" class="nav-brand">🎵 Spotify</a>
+
+        <div class="nav-links">
+            <a href="/song/popularSong" style="color: #ffffff;">Popular</a>
+            <a href="/song/allSong">Songs</a>
+            <a href="/category/allCategory">Categories</a>
+            <a href="/playlist">Playlists</a>
+
+            <% if (username==undefined) { %>
+                <a href="/user/login" class="btn btn-outline">Log in</a>
+            <% } else { %>
+                <a href="/user/profile?username=<%= username %>" class="btn">Profile (<%= username %>)</a>
+                <a href="/user/logout" class="btn btn-outline">Log out</a>
+            <% } %>
+        </div>
+    </nav>
+
+    <div class="container">
+        <div class="page-header">
+            <h1>Popular Songs</h1>
+        </div>
+
+        <% if (songs != undefined && songs.length > 0) { %>
+            <table class="song-table">
+                <thead>
+                    <tr>
+                        <th>Rank</th>
+                        <th>Song Name</th>
+                        <th>Artist</th>
+                        <th>Category</th>
+                        <th>Views</th>
+                        <th>Rating</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <% songs.forEach(function(song, index) { %>
+                        <tr>
+                            <td><strong><%= index + 1 %></strong></td>
+                            <td><strong><%= song.songname %></strong></td>
+                            <td><%= song.artist %></td>
+                            <td><span class="category-badge"><%= song.category %></span></td>
+                            <td><%= song.view_count %></td>
+                            <td>
+                                <span class="rating-badge">
+                                    <% if (song.averageRating != "No ratings yet") { %>
+                                        ⭐ <%= song.averageRating.toFixed(1) %> / 5.0
+                                    <% } else { %>
+                                        No ratings yet
+                                    <% } %>
+                                </span>
+                            </td>
+                            <td>
+                                <a href="/song/songDetail?songID=<%= song.song_id %>" class="btn btn-outline btn-small">View Details</a>
+                            </td>
+                        </tr>
+                    <% }) %>
+                </tbody>
+            </table>
+        <% } else { %>
+            <div class="empty-state">
+                <p>No songs found.</p>
+            </div>
+        <% } %>
+    </div>
+
+</body>
+</html>

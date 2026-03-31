@@ -5,6 +5,8 @@ const router = express.Router();
 const songController = require('../controllers/songController');
 
 // When a GET request hits '/api/songs', run the getAllSongs function
+
+router.get('/popularSong', songController.getPopularSongs);
 router.get('/allSong', songController.getAllSongs);
 router.get('/songDetail', songController.songDetail);
 // ADD SONG
@@ -21,6 +23,13 @@ router.get('/deleteSong', songController.deleteSong);       // Deletes the song 
 //Search song
 router.get('/search', songController.searchSongs);
 
+module.exports = router;
+
+
+
+
+
+
 
 
 
@@ -34,4 +43,3 @@ router.get('/search', songController.searchSongs);
 
 //
 
-module.exports = router;
