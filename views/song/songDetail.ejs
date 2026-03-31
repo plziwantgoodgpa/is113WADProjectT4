@@ -95,12 +95,9 @@
                             <span class="badge">Your Review</span>
                             <div class="review-rating">⭐ <%= userReview.rating %> / 5</div>
                             <p class="review-text">"<%= userReview.reviewMessage %>"</p>
-                            <!-- // edit review -->
-                            <!-- // delete review -->
-
                             <div style="margin-top: 20px;">
                                 <details>
-                                    <summary class="btn btn-outline" style="cursor: pointer;">Edit Your Review</summary>
+                                    <summary class="btn">Edit Your Review</summary>
 
                                     <div class="review-form-box content-box" style="margin-top: 15px;">
                                         <form action="/review/editReview" method="POST" class="custom-form">
@@ -120,13 +117,20 @@
                                         </form>
                                     </div>
                                 </details>
+                                <br>
+                                <details>
+                                    <summary class="delete-btn">Delete Your Review</summary>
 
-                                <form action="/review/delete-review" method="POST" style="margin-top: 15px;">
-                                    <input type="hidden" name="song_id" value="<%= song.song_id %>">
-                                    <button type="submit" class="btn" style="background-color: #e74c3c;" onclick="return confirm('Delete your review?');">
-                                        Delete Review
-                                    </button>
-                                </form>
+                                    <div style="margin-top: 15px;">
+                                        <form action="/review/delete-review" method="POST" style="margin-top: 15px;">
+                                            <input type="hidden" name="song_id" value="<%= song.song_id %>">
+                                            <button type="submit" class="delete-btn">
+                                                Confirm Delete Review
+                                            </button>
+                                        </form>
+                                    </div>
+                                </details>
+
 
                             </div>
                         </div>

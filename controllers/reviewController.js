@@ -3,8 +3,9 @@ const songModel = require('../model/songModel');
 
 exports.addReview = async function (req, res) {
     const song_id = parseInt(req.body.song_id);
-    const rawReviewMessage = req.body.reviewMessage;
     const rating = parseInt(req.body.rating);
+    const rawReviewMessage = req.body.reviewMessage;
+
     let reviewMessage = "";
     let errors = [];
 
@@ -128,13 +129,19 @@ exports.editReview = async function (req, res) {
 exports.deleteReview = async function (req, res) {
     const song_id = parseInt(req.body.song_id);
 
-    if (!req.session.username) {
+    if (req.session.user != undefined) {
+        user_role = req.session.user.role;
+        username = req.session.user.username;
+    }
+
+    if (!username) {
         return res.redirect('/song/songDetail?songID=' + song_id);
     }
 
-    await reviewModel.deleteReview(song_id, req.session.username);
+    await reviewModel.deleteReview(song_id, username);
 
     res.redirect('/song/songDetail?songID=' + song_id);
+    console.log("review deleted")
 };
 
 function calculateAverageRating(reviews) {

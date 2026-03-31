@@ -52,6 +52,25 @@ body {
     border-radius: 20px;
     font-weight: bold;
     transition: background-color 0.3s ease, transform 0.2s ease;
+    display: flex;           /* Turns the button into a flex container */
+    justify-content: center; /* Centers text horizontally */
+    align-items: center;     /* Centers text vertically */
+    list-style: none;        /* Removes the default arrow/triangle */
+    cursor: pointer;
+}
+
+.delete-btn {
+    background-color: #f72f2f;
+    color: white !important;
+    padding: 8px 20px;
+    border-radius: 20px;
+    font-weight: bold;
+    transition: background-color 0.3s ease, transform 0.2s ease;
+    display: flex;           /* Turns the button into a flex container */
+    justify-content: center; /* Centers text horizontally */
+    align-items: center;     /* Centers text vertically */
+    list-style: none;        /* Removes the default arrow/triangle */
+    cursor: pointer;
 }
 
 .btn:hover {
@@ -136,4 +155,17 @@ body {
     outline: none;
     border-color: #1db954;
 }
+CSS
 
+/* 1. Remove the default arrow from the summary */
+summary.btn {
+    list-style: none;         /* For Chrome/Firefox */
+    display: inline-block;    /* Forces it to respect padding/width like a button */
+    cursor: pointer;
+    text-align: center;
+}
+
+/* 2. Hide the arrow specifically for Safari */
+summary.btn::-webkit-details-marker {
+    display: none;
+}
