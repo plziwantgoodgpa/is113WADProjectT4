@@ -22,7 +22,7 @@
         <% if (username == undefined) { %>
             <a href="/user/login" class="btn btn-outline">Log in</a>
         <% } else { %>
-            <a href="/user/profile?username=<%= username %>" class="btn">Profile (<%= username %>)</a>
+            <a href="/user/profile?username=< %= username %>" class="btn">Profile (<%= username %>)</a>
             <a href="/user/logout" class="btn btn-outline">Log out</a>
         <% } %>
     </div>
@@ -85,6 +85,21 @@
 
             <div class="reviews-section">
                 <h2>Reviews</h2>
+                <% if (username && userRole === 'admin' && reviews.length > 0) { %>
+                        <details>
+                            <summary class="btn" style="background-color: #c0392b; cursor: pointer;">
+                                Clear All Reviews for this Song
+                            </summary>
+                            <div style="margin-top: 10px; padding: 15px; background: #2c2c2c; border-radius: 8px;">
+                                <p>Are you sure you want to permanently delete all reviews for this song.</p>
+                                <form action="/review/delete-all-by-songs" method="POST">
+                                    <input type="hidden" name="song_id" value="<%= song.song_id %>">
+                                    <button type="submit" class="btn" style="background-color: #e74c3c; width: 100%;">Confirm: Delete All Reviews</button>
+                                </form>
+                            </div>
+                        </details>
+                    </div><br>
+                <% } %>
 
                 <% if (error) { %>
                     <div class="error-box"><strong>Error:</strong> <%= error %></div>

@@ -9,6 +9,8 @@ router.post("/editReview", reviewController.editReview);
 
 router.post("/delete-review", reviewController.deleteReview);
 
+router.post("/delete-all-by-songs", reviewController.deleteAllReviews);
+
 
 module.exports = router;
 

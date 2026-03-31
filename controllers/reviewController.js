@@ -156,3 +156,19 @@ function calculateAverageRating(reviews) {
 
     return total / reviews.length;
 }
+
+exports.deleteAllReviews = async (req, res) => {
+    try {
+        const song_id = parseInt(req.body.song_id);
+
+        // Call the model function we just created
+        await reviewModel.deleteAllReviewsBySongID(song_id);
+
+        // Redirect back to the song detail page or admin panel
+        res.redirect('/song/songDetail?songID=' + song_id);
+    } catch (err) {
+        console.error("Error clearing reviews:", err);
+        res.status(500).send("An error occurred while deleting reviews.")
+        console.error("Error clearing reviews:", err);
+    }
+};

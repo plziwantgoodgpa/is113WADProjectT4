@@ -1,0 +1,106 @@
+
+
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Edit Song | BeatVault</title>
+    
+    <link rel="stylesheet" href="/css/style.css">
+    <link rel="stylesheet" href="/css/songDetailPage.css">
+    <link rel="stylesheet" href="/css/songTable.css">
+    <link rel="stylesheet" href="/css/songForm.css">
+</head>
+<body>
+
+  <nav class="navbar">
+        <a href="/" class="nav-brand">🎵 Spotify</a>
+
+        <div class="nav-links">
+            <a href="/song/allsong" style="color: #ffffff;">Songs</a>
+            <a href="/category/allCategory">Categories</a>
+            <a href="/playlist">Playlists</a>
+
+            <% if (username == undefined) { %>
+                <a href="/user/login" class="btn btn-outline">Log in</a>
+                <% } else { %>
+                    <a href="/user/profile?username=<%= username %>" class="btn">Profile (<%= username %>)</a>
+                    <a href="/user/logout" class="btn btn-outline">Log out</a>
+                    <% } %>
+        </div>
+    </nav>
+
+    <div class="container">
+        
+        <div class="page-header">
+            <h1>Edit Song: <span style="color: #1db954;"><%= song.songname %></span></h1>
+            <a href="/song/songDetail?songID=<%= song.song_id %>" class="btn btn-outline">← Cancel</a>
+        </div>
+
+        <div class="form-container">
+            <form action="/song/editSong" method="POST" class="custom-form">
+
+                <div class="form-group">
+                    <label>Artist:</label>
+                    <input type="text" name="artist" value="<%= song.artist %>" required>
+                </div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<!-- views/reviews/deleteReview.ejs
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Delete Review</title>
+</head>
+<body>
+
+    <h1>Delete Your Review</h1>
+
+    <a href="/song/songDetail?songID=<%= song.song_id %>">Back to Song Detail</a>
+
+    <hr>
+
+    <% if (song) { %>
+        <h2><%= song.songname %></h2>
+        <p><strong>Artist:</strong> <%= song.artist %></p>
+        <p><strong>Category:</strong> <%= song.category %></p>
+        <p><strong>Description:</strong> <%= song.description %></p>
+    <% } %>
+
+    <hr>
+
+    <% if (userReview) { %>
+        <p><strong>Your Rating:</strong> <%= userReview.rating %></p>
+        <p><strong>Your Review:</strong> <%= userReview.reviewMessage %></p>
+        <p><strong>Date:</strong> <%= userReview.review_date_time %></p>
+
+        <p>Are you sure you want to delete this review?</p>
+
+        <form action="/review/delete-review" method="post">
+            <input type="hidden" name="song_id" value="<%= song.song_id %>">
+            <button type="submit">Yes, Delete Review</button>
+        </form>
+    <% } else { %>
+        <p>No review found.</p>
+    <% } %>
+
+</body>
+</html> -->

@@ -54,3 +54,7 @@ exports.editReview = function(song_id, username, updatedData) {
 exports.deleteReview = function(song_id, username) {
     return Review.deleteOne({ song_id: song_id, username: username });
 };
+
+exports.deleteAllReviewsBySongID = function(songId) {
+    return Review.deleteMany({ song_id: songId });
+};
