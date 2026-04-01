@@ -86,7 +86,7 @@ exports.deleteCategory = async (req, res) => {
     let categoryID = req.query.categoryID;
     try {
         await CategoryModel.deleteCategory(categoryID);
-        res.redirect("/category/allCategories");
+        res.redirect("/category/allCategory");
     } catch (error) {
         console.error(error);
         res.send("Error deleting the category");
