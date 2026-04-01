@@ -12,15 +12,16 @@ exports.addReview = async function (req, res) {
     let user_role = undefined
     let username = undefined
     console.log(req.session.user)
-    if (req.session.user != undefined) {
+    if (req.session.user !== undefined) {
         user_role = req.session.user.role
         username = req.session.user.username
     }
+
     if (rawReviewMessage !== undefined) {
         reviewMessage = rawReviewMessage.trim();
     }
 
-    if (username == undefined) {
+    if (username === undefined) {
         errors.push("Please log in before adding a review.");
     }
 
@@ -157,18 +158,14 @@ function calculateAverageRating(reviews) {
     return total / reviews.length;
 }
 
-exports.deleteAllReviews = async (req, res) => {
+exports.deleteReviewByAdmin = async (req, res) => {
     try {
-        const song_id = parseInt(req.body.song_id);
-
-        // Call the model function we just created
-        await reviewModel.deleteAllReviewsBySongID(song_id);
-
-        // Redirect back to the song detail page or admin panel
+        const username = req.body.username;
+        const song_id = req.body.song_id;
+        await reviewModel.deleteReview(song_id, username);
         res.redirect('/song/songDetail?songID=' + song_id);
     } catch (err) {
-        console.error("Error clearing reviews:", err);
-        res.status(500).send("An error occurred while deleting reviews.")
-        console.error("Error clearing reviews:", err);
+        console.error("Error deleting review:", err);
+        res.send("An error occurred while deleting the review.");
     }
 };

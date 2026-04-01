@@ -76,7 +76,7 @@
                 <% if (typeof userRole !== 'undefined' && userRole == "admin") { %>
                     <div class="admin-controls" style="margin-top: 20px; padding-top: 20px; border-top: 1px solid #333;">
                         <a href="/song/editSong?songID=<%= song.song_id %>" class="btn btn-outline">Edit Song</a><br>
-                        <a href="/song/deleteSong?songID=<%= song.song_id %>" class="btn" style="background-color: #e74c3c;" onclick="return confirm('Delete this song?');">Delete Song</a>
+                        <a href="/song/deleteSong?songID=<%= song.song_id %>" class="btn" style="background-color: #f72f2f;" onclick="return confirm('Delete this song?');">Delete Song</a>
                     </div>
                 <% } %>
             </div>
@@ -85,22 +85,6 @@
 
             <div class="reviews-section">
                 <h2>Reviews</h2>
-                <% if (username && userRole === 'admin' && reviews.length > 0) { %>
-                        <details>
-                            <summary class="btn" style="background-color: #c0392b; cursor: pointer;">
-                                Clear All Reviews for this Song
-                            </summary>
-                            <div style="margin-top: 10px; padding: 15px; background: #2c2c2c; border-radius: 8px;">
-                                <p>Are you sure you want to permanently delete all reviews for this song.</p>
-                                <form action="/review/delete-all-by-songs" method="POST">
-                                    <input type="hidden" name="song_id" value="<%= song.song_id %>">
-                                    <button type="submit" class="btn" style="background-color: #e74c3c; width: 100%;">Confirm: Delete All Reviews</button>
-                                </form>
-                            </div>
-                        </details>
-                    </div><br>
-                <% } %>
-
                 <% if (error) { %>
                     <div class="error-box"><strong>Error:</strong> <%= error %></div>
                 <% } %>
@@ -138,7 +122,7 @@
                                     <summary class="delete-btn">Delete Your Review</summary>
 
                                     <div style="margin-top: 15px;">
-                                        <form action="/review/delete-review" method="POST" style="margin-top: 15px;">
+                                        <form action="/review/deleteReview" method="POST" style="margin-top: 15px;">
                                             <input type="hidden" name="song_id" value="<%= song.song_id %>">
                                             <p style="font-size: 0.9em; color: #b3b3b3; margin-bottom: 10px;">Are you sure you want to permanently delete you review?</p>
                                             <button type="submit" class="delete-btn">
@@ -182,13 +166,22 @@
                 <div class="review-list">
                     <% if (reviews && reviews.length > 0) { %>
                         <% reviews.forEach(function(review) { %>
-                            <div class="review-card <%= username && review.username === username ? 'user-review-card' : '' %>">
-                                <% if (username && review.username === username) { %>
-                                    <span class="badge">Your Review</span>
-                                <% } %>
-                                <div class="review-rating">⭐ <%= review.rating %> / 5</div>
-                                <p class="review-text"><%= review.reviewMessage %></p>
-                            </div>
+                                <div class="review-card <%= username && review.username === username ? 'user-review-card' : '' %>">
+                                    <% if (username && review.username === username) { %>
+                                        <span class="badge">Your Review</span>
+                                    <% } %>
+                                    <div class="review-rating">⭐ <%= review.rating %> / 5</div>
+                                    <p class="review-text"><%= review.reviewMessage %></p>
+                                    <% if (userRole === 'admin') { %>
+                                        <form action="/review/deleteReviewByAdmin" method="POST" style="margin-top: 10px;">
+                                            <input type="hidden" name="username" value="<%= review.username %>">
+                                            <input type="hidden" name="song_id" value="<%= song.song_id %>">
+                                            <button type="submit" class="btn" style="background-color: #f72f2f;">
+                                                Delete Review
+                                            </button>
+                                        </form>
+                                    <% } %>
+                                </div>
                         <% }) %>
                     <% } else { %>
                         <div class="empty-state">
