@@ -133,7 +133,7 @@ exports.displayAllUsers = async (req, res) => {
 
         const allUsers = await User.find({});
 
-        res.render('users/index', { users: allUsers });
+        res.render('user/index', { users: allUsers });
     } catch (error) {
         console.error("Error fetching users:", error);
 
