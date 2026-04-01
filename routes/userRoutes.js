@@ -13,7 +13,7 @@ router.get("/edit", userController.showEditUser);
 router.post("/edit", userController.editUser);
 //userlist
 router.get("/index", userController.displayAllUsers);
-router.post("/index", userController.deleteUser);
+router.post("/delete", userController.deleteUser);
 //logout
 router.get('/logout', userController.logout);
 module.exports = router;

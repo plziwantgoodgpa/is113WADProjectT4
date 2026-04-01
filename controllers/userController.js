@@ -131,7 +131,7 @@ exports.displayAllUsers = async (req, res) => {
             return res.status(403).send("Unauthorized: You do not have permission to view this page.");
         }
 
-        const allUsers = await User.find({});
+        const allUsers = await User.retrieveAll()
 
         res.render('user/index', { users: allUsers });
     } catch (error) {
@@ -145,11 +145,11 @@ exports.displayAllUsers = async (req, res) => {
             return res.status(403).send("Unauthorized action.");
         }
 
-        const userId = req.params.id;
-        await User.findByIdAndDelete(userId);
-        res.redirect('/users'); 
+        const username = req.query.username;
+        await User.removeUser(username);
+        res.redirect('/user/index'); 
     } catch (error) {
         console.error("Error deleting user:", error);
-        res.redirect('/users');
+        res.redirect('/user/index');
     }
 };

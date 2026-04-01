@@ -12,7 +12,6 @@
 </head>
 <body>
     <h1>All Registered Users</h1>
-    <a href="/register" class="btn btn-edit">Add New User</a>
     <br><br>
 
     <table>
@@ -28,10 +27,8 @@
                 <tr>
                     <td><%= user.username %></td>
                     <td><%= user.role %></td>
-                    <td>
-                        <a href="/users/edit/<%= user._id %>" class="btn btn-edit">Edit</a>
-                        
-                        <form action="/users/delete/<%= user._id %>" method="POST" style="display:inline;">
+                    <td>                        
+                        <form action="/user/delete?username=<%= user.username%>" method="POST" style="display:inline;">
                             <button type="submit" class="btn btn-delete" onclick="return confirm('Are you sure?')">Delete</button>
                         </form>
                     </td>
