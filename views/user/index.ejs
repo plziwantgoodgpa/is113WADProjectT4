@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>User Management</title>
+    <style>
+        table { width: 100%; border-collapse: collapse; }
+        th, td { padding: 10px; border: 1px solid #ddd; text-align: left; }
+        .btn { padding: 5px 10px; text-decoration: none; border-radius: 3px; }
+        .btn-delete { background-color: #ff4d4d; color: white; border: none; cursor: pointer; }
+        .btn-edit { background-color: #4CAF50; color: white; }
+    </style>
+</head>
+<body>
+    <h1>All Registered Users</h1>
+    <a href="/register" class="btn btn-edit">Add New User</a>
+    <br><br>
+
+    <table>
+        <thead>
+            <tr>
+                <th>Username</th>
+                <th>Role</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            <% users.forEach(user => { %>
+                <tr>
+                    <td><%= user.username %></td>
+                    <td><%= user.role %></td>
+                    <td>
+                        <a href="/users/edit/<%= user._id %>" class="btn btn-edit">Edit</a>
+                        
+                        <form action="/users/delete/<%= user._id %>" method="POST" style="display:inline;">
+                            <button type="submit" class="btn btn-delete" onclick="return confirm('Are you sure?')">Delete</button>
+                        </form>
+                    </td>
+                </tr>
+            <% }) %>
+        </tbody>
+    </table>
+</body>
+</html>
