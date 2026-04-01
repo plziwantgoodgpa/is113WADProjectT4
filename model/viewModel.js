@@ -21,3 +21,4 @@ const viewSchema = new mongoose.Schema({
     }
 });
 // view_id make it auto increment
+
