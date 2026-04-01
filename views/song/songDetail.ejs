@@ -22,7 +22,7 @@
         <% if (username == undefined) { %>
             <a href="/user/login" class="btn btn-outline">Log in</a>
         <% } else { %>
-            <a href="/user/profile?username=< %= username %>" class="btn">Profile (<%= username %>)</a>
+            <a href="/user/profile?username=<%= username %>" class="btn">Profile (<%= username %>)</a>
             <a href="/user/logout" class="btn btn-outline">Log out</a>
         <% } %>
     </div>
