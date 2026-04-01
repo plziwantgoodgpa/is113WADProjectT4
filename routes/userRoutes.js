@@ -11,6 +11,9 @@ router.post("/login", userController.loginPost)
 router.get("/profile", userController.showProfile);
 router.get("/edit", userController.showEditUser);
 router.post("/edit", userController.editUser);
+//userlist
+router.get("/edit", userController.displayAllUsers);
+router.post("/edit", userController.deleteUser);
 //logout
 router.get('/logout', userController.logout);
 module.exports = router;
