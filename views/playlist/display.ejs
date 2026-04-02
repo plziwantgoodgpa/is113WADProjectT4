@@ -1,291 +1,73 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <title>My Playlists – Spotify Playlist</title>
-    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
-    <style>
-        *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Playlists | Spotify</title>
 
-        :root {
-            --green: #1DB954;
-            --green-hover: #1ed760;
-            --black: #121212;
-            --dark: #181818;
-            --card: #282828;
-            --card-hover: #333333;
-            --text: #FFFFFF;
-            --muted: #B3B3B3;
-            --border: #333333;
-            --sidebar: 240px;
-        }
-
-        body {
-            background: var(--black);
-            color: var(--text);
-            font-family: 'DM Sans', sans-serif;
-            min-height: 100vh;
-            display: flex;
-        }
-
-        /* Sidebar */
-        .sidebar {
-            width: var(--sidebar);
-            background: #000;
-            padding: 24px 12px;
-            display: flex;
-            flex-direction: column;
-            gap: 8px;
-            position: fixed;
-            top: 0; left: 0; bottom: 0;
-            z-index: 10;
-        }
-
-        .logo {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            padding: 8px 12px 24px;
-        }
-
-        .logo svg { width: 32px; height: 32px; fill: var(--green); }
-
-        .logo-text {
-            font-weight: 700;
-            font-size: 18px;
-            letter-spacing: -0.3px;
-        }
-
-        .nav-item {
-            display: flex;
-            align-items: center;
-            gap: 14px;
-            padding: 10px 12px;
-            border-radius: 6px;
-            color: var(--muted);
-            text-decoration: none;
-            font-weight: 600;
-            font-size: 14px;
-            transition: color 0.15s, background 0.15s;
-        }
-
-        .nav-item:hover { color: var(--text); }
-        .nav-item.active { color: var(--text); }
-
-        .nav-item svg { width: 22px; height: 22px; fill: currentColor; flex-shrink: 0; }
-
-        /* Main */
-        .main {
-            margin-left: var(--sidebar);
-            flex: 1;
-            padding: 0 32px 100px;
-            min-height: 100vh;
-        }
-
-        .topbar {
-            position: sticky;
-            top: 0;
-            background: linear-gradient(var(--dark), transparent);
-            padding: 24px 0 16px;
-            z-index: 5;
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-        }
-
-        .topbar h1 {
-            font-size: 28px;
-            font-weight: 700;
-            letter-spacing: -0.5px;
-        }
-
-        .btn-create {
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            background: var(--green);
-            color: #000;
-            font-weight: 700;
-            font-size: 14px;
-            padding: 10px 20px;
-            border-radius: 500px;
-            text-decoration: none;
-            transition: background 0.15s, transform 0.1s;
-        }
-
-        .btn-create:hover { background: var(--green-hover); transform: scale(1.02); }
-
-        /* Hero gradient */
-        .hero {
-            background: linear-gradient(180deg, #1a4a2e 0%, var(--black) 100%);
-            margin: 0 -32px;
-            padding: 40px 32px 32px;
-            margin-bottom: 32px;
-        }
-
-        .hero p { color: var(--muted); font-size: 14px; margin-top: 4px; }
-
-        /* Grid */
-        .grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
-            gap: 20px;
-        }
-
-        .playlist-card {
-            background: var(--card);
-            border-radius: 8px;
-            padding: 16px;
-            text-decoration: none;
-            color: var(--text);
-            transition: background 0.2s, transform 0.2s;
-            position: relative;
-            overflow: hidden;
-            animation: fadeIn 0.4s ease both;
-        }
-
-        .playlist-card:hover {
-            background: var(--card-hover);
-            transform: translateY(-4px);
-        }
-
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(12px); }
-            to   { opacity: 1; transform: translateY(0); }
-        }
-
-        .playlist-card:nth-child(1) { animation-delay: 0.05s; }
-        .playlist-card:nth-child(2) { animation-delay: 0.1s; }
-        .playlist-card:nth-child(3) { animation-delay: 0.15s; }
-        .playlist-card:nth-child(4) { animation-delay: 0.2s; }
-        .playlist-card:nth-child(5) { animation-delay: 0.25s; }
-
-        .playlist-art {
-            width: 100%;
-            aspect-ratio: 1;
-            background: linear-gradient(135deg, #1a4a2e, #0d2b1a);
-            border-radius: 6px;
-            margin-bottom: 14px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            position: relative;
-            overflow: hidden;
-        }
-
-        .playlist-art svg { width: 48px; height: 48px; fill: rgba(255,255,255,0.3); }
-
-        .play-btn {
-            position: absolute;
-            bottom: 8px;
-            right: 8px;
-            width: 44px;
-            height: 44px;
-            background: var(--green);
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            opacity: 0;
-            transform: translateY(8px);
-            transition: opacity 0.2s, transform 0.2s;
-            box-shadow: 0 8px 24px rgba(0,0,0,0.5);
-        }
-
-        .playlist-card:hover .play-btn {
-            opacity: 1;
-            transform: translateY(0);
-        }
-
-        .play-btn svg { width: 20px; height: 20px; fill: #000; margin-left: 2px; }
-
-        .playlist-name {
-            font-weight: 700;
-            font-size: 15px;
-            margin-bottom: 4px;
-            white-space: nowrap;
-            overflow: hidden;
-            text-overflow: ellipsis;
-        }
-
-        .playlist-meta {
-            color: var(--muted);
-            font-size: 13px;
-        }
-
-        .empty {
-            text-align: center;
-            padding: 80px 0;
-            color: var(--muted);
-        }
-
-        .empty h2 { font-size: 22px; color: var(--text); margin-bottom: 8px; }
-        .empty p { margin-bottom: 24px; }
-
-        .empty .btn-create {
-            display: inline-flex;
-            margin: 0 auto;
-        }
-    </style>
+    <link rel="stylesheet" href="/css/style.css">
+    <link rel="stylesheet" href="/css/songTable.css">
 </head>
 <body>
 
-    <!-- Sidebar -->
-    <nav class="sidebar">
-        <div class="logo">
-            <svg viewBox="0 0 24 24"><path d="M12 0C5.4 0 0 5.4 0 12s5.4 12 12 12 12-5.4 12-12S18.66 0 12 0zm5.521 17.34c-.24.359-.66.48-1.021.24-2.82-1.74-6.36-2.101-10.561-1.141-.418.122-.779-.179-.899-.539-.12-.421.18-.78.54-.9 4.56-1.021 8.52-.6 11.64 1.32.42.18.479.659.301 1.02zm1.44-3.3c-.301.42-.841.6-1.262.3-3.239-1.98-8.159-2.58-11.939-1.38-.479.12-1.02-.12-1.14-.6-.12-.48.12-1.021.6-1.141C9.6 9.9 15 10.561 18.72 12.84c.361.181.54.78.241 1.2zm.12-3.36C15.24 8.4 8.82 8.16 5.16 9.301c-.6.179-1.2-.181-1.38-.721-.18-.601.18-1.2.72-1.381 4.26-1.26 11.28-1.02 15.721 1.621.539.3.719 1.02.419 1.56-.299.421-1.02.599-1.559.3z"/></svg>
-            <span class="logo-text">Spotify Playlist</span>
+    <nav class="navbar">
+        <a href="/" class="nav-brand">🎵 Spotify</a>
+        <div class="nav-links">
+            <a href="/song/allsong">Songs</a>
+            <a href="/category/allCategory">Categories</a>
+            <a href="/playlist" style="color: #ffffff;">Playlists</a>
+            <a href="/user/profile" class="btn">Profile</a>
+            <a href="/user/logout" class="btn btn-outline">Log out</a>
         </div>
-        <a href="/" class="nav-item">
-            <svg viewBox="0 0 24 24"><path d="M12.5 3.247a1 1 0 0 0-1 0L4 7.577V20h4.5v-6a1 1 0 0 1 1-1h5a1 1 0 0 1 1 1v6H20V7.577l-7.5-4.33zm-2-1.732a3 3 0 0 1 3 0l7.5 4.33a2 2 0 0 1 1 1.732V21a1 1 0 0 1-1 1h-6.5a1 1 0 0 1-1-1v-6h-3v6a1 1 0 0 1-1 1H3a1 1 0 0 1-1-1V7.577a2 2 0 0 1 1-1.732l7.5-4.33z"/></svg>
-            Home
-        </a>
-        <a href="/playlist" class="nav-item active">
-            <svg viewBox="0 0 24 24"><path d="M3 6a1 1 0 0 1 1-1h16a1 1 0 1 1 0 2H4a1 1 0 0 1-1-1zm0 5a1 1 0 0 1 1-1h16a1 1 0 1 1 0 2H4a1 1 0 0 1-1-1zm1 4a1 1 0 1 0 0 2h10a1 1 0 1 0 0-2H4z"/></svg>
-            My Playlists
-        </a>
-        <a href="/song/allsong" class="nav-item">
-            <svg viewBox="0 0 24 24"><path d="M12 3v10.55A4 4 0 1 0 14 17V7h4V3h-6z"/></svg>
-            Songs
-        </a>
     </nav>
 
-    <!-- Main Content -->
-    <main class="main">
-        <div class="topbar">
-            <h1>My Playlists</h1>
-            <a href="/playlist/create" class="btn-create">
-                <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M12 5v14M5 12h14" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"/></svg>
-                New Playlist
-            </a>
-        </div>
+    <div class="container">
 
-        <div class="hero">
-            <p>All your music, in one place.</p>
+        <div class="page-header">
+            <h1>My Playlists</h1>
+            <a href="/playlist/create" class="btn">+ New Playlist</a>
         </div>
 
         <% if (playlists.length === 0) { %>
-            <div class="empty">
+            <div class="empty-state">
                 <h2>No playlists yet</h2>
                 <p>Create your first playlist and start adding songs.</p>
-                <a href="/playlist/create" class="btn-create">+ Create Playlist</a>
+                <br>
+                <a href="/playlist/create" class="btn">+ Create Playlist</a>
             </div>
         <% } else { %>
-            <div class="grid">
-                <% playlists.forEach(playlist => { %>
-                    <a href="/playlist/<%= playlist.playList_id %>" class="playlist-card">
-                        <div class="playlist-art">
-                            <svg viewBox="0 0 24 24"><path d="M12 3v10.55A4 4 0 1 0 14 17V7h4V3h-6z"/></svg>
-                            <div class="play-btn">
-                                <svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
-                            </div>
-                        </div>
-                        <div class="playlist-name"><%= playlist.PlayListName %></div>
-                        <div class="playlist-meta"><%= playlist.songs.length %> songs</div>
-                    </a>
-                <% }) %>
-            </div>
+            <table class="song-table">
+                <thead>
+                    <tr>
+                        <th>#</th>
+                        <th>Playlist Name</th>
+                        <th>Songs</th>
+                        <th>Created</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <% playlists.forEach((playlist, index) => { %>
+                        <tr>
+                            <td><%= index + 1 %></td>
+                            <td>
+                                <a href="/playlist/<%= playlist.playList_id %>" style="color: #1db954; text-decoration: none; font-weight: 600;">
+                                    <%= playlist.PlayListName %>
+                                </a>
+                            </td>
+                            <td><%= playlist.songs.length %> songs</td>
+                            <td><%= new Date(playlist.date_created).toLocaleDateString() %></td>
+                            <td style="display: flex; gap: 8px;">
+                                <a href="/playlist/<%= playlist.playList_id %>" class="btn btn-small">View</a>
+                                <a href="/playlist/delete/<%= playlist.playList_id %>" class="delete-btn btn-small">Delete</a>
+                            </td>
+                        </tr>
+                    <% }) %>
+                </tbody>
+            </table>
         <% } %>
-    </main>
+
+    </div>
 
 </body>
 </html>

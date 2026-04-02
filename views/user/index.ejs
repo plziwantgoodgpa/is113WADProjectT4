@@ -26,7 +26,7 @@
             <% users.forEach(user => { %>
                 <tr>
                     <td><%= user.username %></td>
-                    <td><%= user.role %></td>
+                    <td><%= user.user_role %></td>
                     <td>                        
                         <form action="/user/delete?username=<%= user.username%>" method="POST" style="display:inline;">
                             <button type="submit" class="btn btn-delete" onclick="return confirm('Are you sure?')">Delete</button>
