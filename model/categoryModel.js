@@ -10,7 +10,7 @@ const categorySchema = new mongoose.Schema({
     name: {
         type: String,
         required: [true, 'A category must have a name'],
-        unique: true // Category names should usually be unique! (e.g., only one "Rock")
+        unique: true
     },
     description: {
         type: String,
@@ -18,29 +18,10 @@ const categorySchema = new mongoose.Schema({
     }
 });
 
-// 2. Auto-Increment Hook for category_id
-// categorySchema.pre('validate', async function(next) {
-//     if (this.isNew) {
-//         try {
-//             const lastCategory = await this.constructor.findOne().sort({ category_id: -1 });
-//             if (lastCategory && lastCategory.category_id) {
-//                 this.category_id = lastCategory.category_id + 1;
-//             } else {
-//                 this.category_id = 1;
-//             }
-//         } catch (error) {
-//             return next(error);
-//         }
-//     }
-//     next();
-// });
 
 // 3. Create the Model
 const Category = mongoose.model('Category', categorySchema, 'Category');
 
-// --------------------------------------------------------
-// 4. Custom Methods (Exported for the Controller)
-// --------------------------------------------------------
 
 exports.retrieveAll = function () {
     return Category.find();

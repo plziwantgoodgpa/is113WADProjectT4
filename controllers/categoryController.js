@@ -44,7 +44,6 @@ exports.insertCategory = async (req, res) => {
 
         // CHECK 1: MongoDB Duplicate Key Error (Unique constraint failed)
         if (error.code === 11000) {
-            // error.keyValue holds the exact duplicate value, e.g., { name: 'Rock' }
             if (error.keyValue && error.keyValue.name) {
                 errMsg = `The category "${error.keyValue.name}" already exists.`;
             } else {
@@ -53,13 +52,9 @@ exports.insertCategory = async (req, res) => {
         }
         // CHECK 2: Mongoose Validation Errors (e.g., missing required fields)
         else if (error.name === "ValidationError") {
-            // Combines all Mongoose validation error messages into one string
             errMsg = Object.values(error.errors).map(val => val.message).join(', ');
         }
 
-        // REDIRECT FIX: 
-        // 1. Added the missing '&' between categoryID and errMsg.
-        // 2. Used encodeURIComponent() so spaces and special characters in the message don't break the URL.
         res.redirect(`/category/addCategory?errMsg=${encodeURIComponent(errMsg)}`);
     }
 };
@@ -104,7 +99,6 @@ exports.updateCategory = async (req, res) => {
 
         // CHECK 1: MongoDB Duplicate Key Error (Unique constraint failed)
         if (error.code === 11000) {
-            // error.keyValue holds the exact duplicate value, e.g., { name: 'Rock' }
             if (error.keyValue && error.keyValue.name) {
                 errMsg = `The category "${error.keyValue.name}" already exists.`;
             } else {
@@ -116,10 +110,6 @@ exports.updateCategory = async (req, res) => {
             // Combines all Mongoose validation error messages into one string
             errMsg = Object.values(error.errors).map(val => val.message).join(', ');
         }
-
-        // REDIRECT FIX: 
-        // 1. Added the missing '&' between categoryID and errMsg.
-        // 2. Used encodeURIComponent() so spaces and special characters in the message don't break the URL.
         res.redirect(`/category/editCategory?categoryID=${req.body.category_id}&errMsg=${encodeURIComponent(errMsg)}`);
     }
 };
@@ -153,11 +143,9 @@ exports.displayCatDetail = async (req, res) => {
 
     try {
         // 2. Fetch the category name (so we can display "Songs in Pop" at the top of the page)
-        // Note: Change 'findByCategoryId' to whatever your CategoryModel method is actually named!
         let category = await CategoryModel.findByCategoryId(categoryID);
 
         // 3. Fetch ONLY the songs that belong to this category
-        // Note: Change 'findSongsByCategory' to whatever your SongModel method is named!
         let filteredSongs = await SongModel.findSongsByCat(categoryID);
         for (i = 0; i < filteredSongs.length; i++) {
             let currentSong = filteredSongs[i]

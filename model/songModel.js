@@ -51,8 +51,6 @@ exports.findBySongId = function (song_id) {
 // ADD NEW SONG
 exports.addSong = async function (songData) {
     // 1. Find the song with the highest song_id in the database
-    // .sort({ song_id: -1 }) sorts them in descending order (highest to lowest)
-    // .findOne() just grabs the very first one on that list
     const lastSong = await Song.findOne().sort({ song_id: -1 });
 
     // 2. Figure out the next ID
@@ -80,13 +78,10 @@ exports.editSong = function (song_id, updatedData) {
 
 // DELETE SONG
 exports.deleteSong = function (song_id) {
-    // Finds the specific song and removes it from MongoDB
     return Song.findOneAndDelete({ song_id: song_id });
 };
 
 //search song
-// SEARCH SONGS (By Name or Category)
-// SEARCH SONGS (By Song Name Only - Partial & Case-Insensitive)
 exports.searchSongs = function (searchTerm) {
     return Song.find({
         $or: [
@@ -98,19 +93,16 @@ exports.searchSongs = function (searchTerm) {
         ]
     });
 };
-// whyy got '$'
 
 exports.findSongsByCat = async (categoryID) => {
     try {
-        // Assuming your exported Mongoose model is called 'Song'
-        // This tells MongoDB: "Find every song where the category_id equals this number"
         const filteredSongs = await Song.find({ category_id: categoryID });
 
         return filteredSongs;
 
     } catch (error) {
         console.error("MongoDB Error in findSongsByCategory:", error);
-        throw error; // Tosses the error back to the controller so your app doesn't crash
+        throw error; 
     }
 };
 

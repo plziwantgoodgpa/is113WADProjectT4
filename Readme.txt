@@ -53,3 +53,7 @@ Username: testUser
 Password: 123
 
 (Note: You can also register a brand new user account directly through the application's Sign Up page.)
+
+--------------------------------------------------
+d. AI and LLM
+The css code are meanly created by AI/LLM, we only did very little change to the naming for the class.

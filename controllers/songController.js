@@ -249,9 +249,7 @@ exports.deleteSong = async (req, res) => {
 };
 
 //search song
-// --- SEARCH SONGS ---
 exports.searchSongs = async (req, res) => {
-    // We use 'q' for query, which will come from our search form input
     let searchTerm = req.query.searchTerm;
     let user_role = undefined;
     let username = undefined;
