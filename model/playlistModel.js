@@ -48,7 +48,8 @@ exports.removeSongFromPlaylist = async (playList_id, user_id, song_id) => {
             {
                 $pull: { songs: { song_id: song_id } }
             },
-            { new: true }
+            { returnDocument: 'after' }
+
         );
     } catch (error) {
         return null;
@@ -93,7 +94,8 @@ exports.addSongToPlaylist = async (playList_id, user_id, song_id) => {
         return await Playlist.findOneAndUpdate(
             { playList_id: playList_id, user_id: user_id },
             { $push: { songs: { song_id: song_id } } },
-            { new: true }
+            { returnDocument: 'after' }
+
         );
     } catch (error) {
         console.error(error);
@@ -105,7 +107,8 @@ exports.updatePlaylistName = async (playList_id, user_id, new_name) => {
         return await Playlist.findOneAndUpdate(
             { playList_id: playList_id, user_id: user_id },
             { $set: { PlayListName: new_name } },
-            { new: true }
+            { returnDocument: 'after' }
+
         );
     } catch (error) {
         console.error(error);

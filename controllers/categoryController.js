@@ -30,7 +30,7 @@ exports.renderAddForm = (req, res) => {
         // This sends a popup alert to the browser, then redirects them to the library
         return res.send('<script>alert("Access Denied: You do not have permission to view this page."); window.location.href="/song/allSong";</script>');
     }
-    res.render("category/addCategory", { username, error: errMsg });
+    res.render("category/addCategory", { username, error: errMsg ,user_role});
 };
 
 exports.insertCategory = async (req, res) => {

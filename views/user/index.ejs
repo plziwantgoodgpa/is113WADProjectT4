@@ -1,40 +1,69 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>User Management</title>
-    <style>
-        table { width: 100%; border-collapse: collapse; }
-        th, td { padding: 10px; border: 1px solid #ddd; text-align: left; }
-        .btn { padding: 5px 10px; text-decoration: none; border-radius: 3px; }
-        .btn-delete { background-color: #ff4d4d; color: white; border: none; cursor: pointer; }
-        .btn-edit { background-color: #4CAF50; color: white; }
-    </style>
+
+    <link rel="stylesheet" href="/css/style.css">
+    <link rel="stylesheet" href="/css/songTable.css">
 </head>
 <body>
-    <h1>All Registered Users</h1>
-    <br><br>
 
-    <table>
-        <thead>
-            <tr>
-                <th>Username</th>
-                <th>Role</th>
-                <th>Actions</th>
-            </tr>
-        </thead>
-        <tbody>
-            <% users.forEach(user => { %>
-                <tr>
-                    <td><%= user.username %></td>
-                    <td><%= user.user_role %></td>
-                    <td>                        
-                        <form action="/user/delete?username=<%= user.username%>" method="POST" style="display:inline;">
-                            <button type="submit" class="btn btn-delete" onclick="return confirm('Are you sure?')">Delete</button>
-                        </form>
-                    </td>
-                </tr>
-            <% }) %>
-        </tbody>
-    </table>
+    <nav class="navbar">
+        <a href="/" class="nav-brand">🎵 Spotify</a>
+        <div class="nav-links">
+            <% if (user.role=='admin') { %>
+                <a href="/user/index">Users</a>
+            <% } %>
+            <a href="/song/popularSong">Popular</a>
+            <a href="/song/allsong">Songs</a>
+            <a href="/category/allCategory">Categories</a>
+            <a href="/playlist">Playlists</a>
+            <a href="/user/profile" class="btn">Profile</a>
+            <a href="/user/logout" class="btn btn-outline">Log out</a>
+        </div>
+    </nav>
+
+    <div class="container">
+
+        <div class="page-header">
+            <h1>All Registered Users</h1>
+        </div>
+
+        <% if (users.length === 0) { %>
+            <div class="empty-state">
+                <h2>No users found</h2>
+                <p>There are no registered users yet.</p>
+            </div>
+        <% } else { %>
+            <table class="song-table">
+                <thead>
+                    <tr>
+                        <th>#</th>
+                        <th>Username</th>
+                        <th>Role</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <% users.forEach((user, index) => { %>
+                        <tr>
+                            <td><%= index + 1 %></td>
+                            <td><%= user.username %></td>
+                            <td><%= user.user_role %></td>
+                            <td>
+                                <form action="/user/delete?username=<%= user.username %>" method="POST">
+                                    <button type="submit" class="delete-btn btn-small" onclick="return confirm('Are you sure?')">Delete</button>
+                                </form>
+                            </td>
+                        </tr>
+                    <% }) %>
+                </tbody>
+            </table>
+        <% } %>
+
+    </div>
+
 </body>
 </html>

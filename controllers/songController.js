@@ -86,7 +86,7 @@ exports.songDetail = async function (req, res) {
         }
         averageRating = total / reviews.length;
     }
-
+    
     res.render("song/songDetail", {
         song: song,
         reviews: reviews,
@@ -420,6 +420,7 @@ exports.showAddSongForm = async (req, res) => {
     let categories = await CategoryModel.retrieveAll();
 
     res.render("song/addSong", {
+        user: req.session.user,
         user_role: user_role,
         categories: categories,
         username: username
@@ -493,6 +494,7 @@ exports.showEditSongForm = async (req, res) => {
 
         // Pass BOTH the specific song and the list of categories to EJS
         res.render("song/editSong", {
+            user: req.session.user,
             song: song,
             categories: categories,
             username: username
@@ -585,7 +587,7 @@ exports.searchSongs = async (req, res) => {
         // console.log("search result for "+songs)
         // console.log("This is the searchTerm for song "+searchTerm)
         // Send BOTH the songs array and the search term back to the page
-        res.render("song/searchResult", { songs: songs, searchTerm: searchTerm, username: username, });
+        res.render("song/searchResult", { songs: songs, searchTerm: searchTerm, username: username, user: req.session.user});
 
     } catch (error) {
         console.error("Search error:", error);
@@ -630,7 +632,7 @@ exports.getPopularSongs = async (req, res) => {
             }
         }
 
-        res.render("song/popularSong", { songs, user_role, username });
+        res.render("song/popularSong", { songs, user_role, username, user: req.session.user});
 
     } catch (error) {
         console.error(error);

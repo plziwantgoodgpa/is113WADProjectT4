@@ -14,6 +14,9 @@
     <a href="/" class="nav-brand">🎵 Spotify</a>
 
     <div class="nav-links">
+        <% if (userRole=='admin') { %>
+                <a href="/user/index">Users</a>
+            <% } %>
         <a href="/song/popularSong">Popular</a>
         <a href="/song/allSong" style="color: #ffffff;">Songs</a>
         <a href="/category/allCategory">Categories</a>

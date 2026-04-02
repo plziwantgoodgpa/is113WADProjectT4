@@ -132,8 +132,8 @@ exports.displayAllUsers = async (req, res) => {
         }
 
         const allUsers = await User.retrieveAll()
-
-        res.render('user/index', { users: allUsers });
+        
+        res.render('user/index', { users: allUsers, user:req.session.user });
     } catch (error) {
         console.error("Error fetching users:", error);
 
