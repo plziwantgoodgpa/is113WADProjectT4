@@ -44,7 +44,7 @@ c. TEST CREDENTIALS
 
 To test the role-based functionality of the application (such as the "+ Add New Song" button which is restricted to admins), please use the following seeded accounts:
 
-Admin Account (Has full permissions to add/edit/delete songs and categories):
+Admin Account (Has full permissions to add/edit/delete songs, categories and reviews):
 Username: admin1
 Password: 123
 
