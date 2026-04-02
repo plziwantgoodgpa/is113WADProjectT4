@@ -21,7 +21,7 @@ const reviewSchema = new mongoose.Schema({
     },
     review_date_time: {
         type: Date,
-        default: Date.now
+        default: Date.now()
     }
 });
 

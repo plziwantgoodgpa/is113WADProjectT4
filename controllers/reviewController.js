@@ -62,7 +62,8 @@ exports.addReview = async function (req, res) {
         username: username,
         song_id: song_id,
         rating: rating,
-        reviewMessage: reviewMessage
+        reviewMessage: reviewMessage,
+        review_date_time: Date.now()
     });
 
     res.redirect('/song/songDetail?songID=' + song_id);
@@ -101,7 +102,7 @@ exports.editReview = async function (req, res) {
 
     const song = await songModel.findBySongId(song_id);
     const reviews = await reviewModel.findBySongId(song_id);
-    const userReview = await reviewModel.findOneReview(song_id, req.session.username);
+    const userReview = await reviewModel.findOneReview(song_id, username);
 
     if (errors.length > 0) {
         return res.render('song/songDetail', {
@@ -121,7 +122,7 @@ exports.editReview = async function (req, res) {
     await reviewModel.editReview(song_id, username, {
         rating: rating,
         reviewMessage: reviewMessage,
-        review_date_time: new Date()
+        review_date_time: Date.now()
     });
 
     res.redirect('/song/songDetail?songID=' + song_id);
