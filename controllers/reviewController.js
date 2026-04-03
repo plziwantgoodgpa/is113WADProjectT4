@@ -12,15 +12,16 @@ exports.addReview = async function (req, res) {
     let user_role = undefined
     let username = undefined
     console.log(req.session.user)
-    if (req.session.user != undefined) {
+    if (req.session.user !== undefined) {
         user_role = req.session.user.role
         username = req.session.user.username
     }
+
     if (rawReviewMessage !== undefined) {
         reviewMessage = rawReviewMessage.trim();
     }
 
-    if (username == undefined) {
+    if (username === undefined) {
         errors.push("Please log in before adding a review.");
     }
 
@@ -61,7 +62,8 @@ exports.addReview = async function (req, res) {
         username: username,
         song_id: song_id,
         rating: rating,
-        reviewMessage: reviewMessage
+        reviewMessage: reviewMessage,
+        review_date_time: Date.now()
     });
 
     res.redirect('/song/songDetail?songID=' + song_id);
@@ -100,7 +102,7 @@ exports.editReview = async function (req, res) {
 
     const song = await songModel.findBySongId(song_id);
     const reviews = await reviewModel.findBySongId(song_id);
-    const userReview = await reviewModel.findOneReview(song_id, req.session.username);
+    const userReview = await reviewModel.findOneReview(song_id, username);
 
     if (errors.length > 0) {
         return res.render('song/songDetail', {
@@ -120,7 +122,7 @@ exports.editReview = async function (req, res) {
     await reviewModel.editReview(song_id, username, {
         rating: rating,
         reviewMessage: reviewMessage,
-        review_date_time: new Date()
+        review_date_time: Date.now()
     });
 
     res.redirect('/song/songDetail?songID=' + song_id);
@@ -156,3 +158,15 @@ function calculateAverageRating(reviews) {
 
     return total / reviews.length;
 }
+
+exports.deleteReviewByAdmin = async (req, res) => {
+    try {
+        const username = req.body.username;
+        const song_id = req.body.song_id;
+        await reviewModel.deleteReview(song_id, username);
+        res.redirect('/song/songDetail?songID=' + song_id);
+    } catch (err) {
+        console.error("Error deleting review:", err);
+        res.send("An error occurred while deleting the review.");
+    }
+};

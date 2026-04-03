@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title><%= playlist.PlayListName %> | Spotify</title>
+    <title><%= playlist.PlayListName %></title>
 
     <link rel="stylesheet" href="/css/style.css">
     <link rel="stylesheet" href="/css/songDetailPage.css">
@@ -15,6 +15,10 @@
         <a href="/" class="nav-brand">🎵 Spotify</a>
 
         <div class="nav-links">
+            <% if (user.role=='admin') { %>
+                <a href="/user/index">Users</a>
+            <% } %>
+            <a href="/song/popularSong">Popular</a>
             <a href="/song/allsong">Songs</a>
             <a href="/category/allCategory">Categories</a>
             <a href="/playlist" style="color: #ffffff;">Playlists</a>
@@ -62,14 +66,14 @@
                 <table class="song-table">
                     <thead>
                         <tr>
-                            <th>Song ID</th>
+                            <th>Song Name</th>
                             <th>Action</th>
                         </tr>
                     </thead>
                     <tbody>
-                        <% playlist.songs.forEach(function(song) { %>
+                        <% songs.forEach(function(song) { %>
                             <tr>
-                                <td><%= song.song_id %></td>
+                                <td><%= song.songname %></td>
                                 <td>
                                     <a href="/playlist/remove/<%= playlist.playList_id %>/<%= song.song_id %>" class="btn btn-outline btn-small">
                                         Remove

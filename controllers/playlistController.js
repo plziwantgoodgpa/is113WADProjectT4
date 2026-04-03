@@ -20,7 +20,8 @@ async function removeSong(song_id1,user_id1,playList_id1) {
 }
 exports.showCreatePlaylist = (req, res) => {
     if (!req.session.user) return res.redirect('/user/login');
-    res.render('playlist/createPlaylist');
+    const user = req.session.user
+    res.render('playlist/createPlaylist', {user});
 };
 
 exports.createPlaylist = async (req, res) => {
@@ -44,6 +45,7 @@ exports.showRemoveSongPage = async (req, res) => {
     try {
         const playList_id = req.params.id;
         const playlist = await Playlist.findByPlaylistId(playList_id);
+        const user = req.session.user
 
         if (!playlist) {
             return res.send('Playlist not found');
@@ -54,7 +56,7 @@ exports.showRemoveSongPage = async (req, res) => {
             playlist.songs.map(s => Song.findBySongId(s.song_id))
         );
 
-        res.render('playlist/removeSong', {playlist, songs: songDetails });
+        res.render('playlist/removeSong', {playlist, songs: songDetails,user });
     } catch (error) {
         res.send('Error loading playlist');
     }
@@ -77,9 +79,10 @@ await Playlist.removeSongFromPlaylist(playList_id, req.session.user.user_id, son
 
 exports.getAllPlaylist = async (req,res) =>{
     if (!req.session.user) return res.redirect('/user/login');
+    const user = req.session.user
     const user_id = req.session.user.username;
         const playlists = await Playlist.retrieveByUserId(user_id);
-        res.render('playlist/display', { playlists, user_id });
+        res.render('playlist/display', { playlists, user_id, user });
 }
 
 // show all songs to add to a playlist
@@ -93,7 +96,7 @@ exports.showAddSongPage = async (req, res) => {
         const Song = require('../model/songModel');
         const songs = await Song.retrieveAll();
 
-        res.render('playlist/addSong', { playlist, songs });
+        res.render('playlist/addSong', { playlist, songs ,user: req.session.user});
     } catch (error) {
         console.error(error);
         res.send('Error loading songs');
@@ -124,13 +127,14 @@ exports.getPlaylist = async (req, res) => {
     try {
         const playList_id = req.params.id;
         const playlist = await Playlist.findByPlaylistId(playList_id);
+        const user = req.session.user
         if (!playlist) return res.send('Playlist not found');
         //retrieves all the songs from song database
         const songDetails = await Promise.all(
             playlist.songs.map(s => Song.findBySongId(s.song_id))
         );
 
-        res.render('playlist/PlaylistDetails', { playlist, songs: songDetails });
+        res.render('playlist/PlaylistDetails', { playlist, songs: songDetails ,user});
     } catch (error) {
         console.error(error);
         res.send('Error loading playlist');
@@ -155,6 +159,7 @@ exports.showEditPlaylist = async (req, res) => {
     try {
         if (!req.session.user) return res.redirect('/user/login');
 
+        const user = req.session.user
         const playList_id = req.params.id;
         const playlist = await Playlist.findByPlaylistId(playList_id);
 
@@ -162,7 +167,7 @@ exports.showEditPlaylist = async (req, res) => {
             return res.send('Playlist not found');
         }
 
-        res.render('playlist/editPlaylist', { playlist });
+        res.render('playlist/editPlaylist', { playlist,user});
     } catch (error) {
         console.error(error);
         res.send('Error loading edit playlist page');

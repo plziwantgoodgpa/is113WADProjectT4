@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Create Playlist | Spotify</title>
+    <title>Create Playlist</title>
 
     <link rel="stylesheet" href="/css/style.css">
     <link rel="stylesheet" href="/css/songForm.css">
@@ -14,6 +14,10 @@
         <a href="/" class="nav-brand">🎵 Spotify</a>
 
         <div class="nav-links">
+            <% if (user.user_role=='admin') { %>
+                <a href="/user/index">Users</a>
+            <% } %>
+            <a href="/song/popularSong">Popular</a>
             <a href="/song/allsong">Songs</a>
             <a href="/category/allCategory">Categories</a>
             <a href="/playlist" style="color: #ffffff;">Playlists</a>

@@ -21,7 +21,7 @@ exports.getAllCategories = async (req, res) => {
 exports.renderAddForm = (req, res) => {
     let user_role = undefined;
     let username = undefined;
-
+    let errMsg = req.query.errMsg || null;
     if (req.session.user != undefined) {
         user_role = req.session.user.role;
         username = req.session.user.username;
@@ -30,7 +30,7 @@ exports.renderAddForm = (req, res) => {
         // This sends a popup alert to the browser, then redirects them to the library
         return res.send('<script>alert("Access Denied: You do not have permission to view this page."); window.location.href="/song/allSong";</script>');
     }
-    res.render("category/addCategory", { username });
+    res.render("category/addCategory", { username, error: errMsg ,user_role});
 };
 
 exports.insertCategory = async (req, res) => {
@@ -39,7 +39,23 @@ exports.insertCategory = async (req, res) => {
         res.redirect("/category/allCategory");
     } catch (error) {
         console.error(error);
-        res.send("Error saving category. Make sure the name is unique!");
+        console.error(error);
+        let errMsg = "An error occurred while updating the category.";
+
+        // CHECK 1: MongoDB Duplicate Key Error (Unique constraint failed)
+        if (error.code === 11000) {
+            if (error.keyValue && error.keyValue.name) {
+                errMsg = `The category "${error.keyValue.name}" already exists.`;
+            } else {
+                errMsg = "A category with this name already exists.";
+            }
+        }
+        // CHECK 2: Mongoose Validation Errors (e.g., missing required fields)
+        else if (error.name === "ValidationError") {
+            errMsg = Object.values(error.errors).map(val => val.message).join(', ');
+        }
+
+        res.redirect(`/category/addCategory?errMsg=${encodeURIComponent(errMsg)}`);
     }
 };
 
@@ -47,7 +63,7 @@ exports.showEditForm = async (req, res) => {
     let categoryID = req.query.categoryID;
     let user_role = undefined;
     let username = undefined;
-
+    let errMsg = req.query.errMsg || null;
     if (req.session.user != undefined) {
         user_role = req.session.user.role;
         username = req.session.user.username;
@@ -65,7 +81,7 @@ exports.showEditForm = async (req, res) => {
         let category = await CategoryModel.findByCategoryId(categoryID);
         if (!category) return res.redirect("/category/allCategory");
 
-        res.render("category/editCategory", { category, username, user_role });
+        res.render("category/editCategory", { category, username, user_role, error: errMsg });
     } catch (error) {
         console.error(error);
         res.status(500).send("Error loading category edit page");
@@ -73,12 +89,28 @@ exports.showEditForm = async (req, res) => {
 };
 
 exports.updateCategory = async (req, res) => {
+
     try {
-        await CategoryModel.editCategory(req.body.category_id, req.body);
+        await CategoryModel.editCategory(req.body.category_id, req.body,);
         res.redirect("/category/allCategory");
     } catch (error) {
         console.error(error);
-        res.send("Error updating the category");
+        let errMsg = "An error occurred while updating the category.";
+
+        // CHECK 1: MongoDB Duplicate Key Error (Unique constraint failed)
+        if (error.code === 11000) {
+            if (error.keyValue && error.keyValue.name) {
+                errMsg = `The category "${error.keyValue.name}" already exists.`;
+            } else {
+                errMsg = "A category with this name already exists.";
+            }
+        }
+        // CHECK 2: Mongoose Validation Errors (e.g., missing required fields)
+        else if (error.name === "ValidationError") {
+            // Combines all Mongoose validation error messages into one string
+            errMsg = Object.values(error.errors).map(val => val.message).join(', ');
+        }
+        res.redirect(`/category/editCategory?categoryID=${req.body.category_id}&errMsg=${encodeURIComponent(errMsg)}`);
     }
 };
 
@@ -86,7 +118,7 @@ exports.deleteCategory = async (req, res) => {
     let categoryID = req.query.categoryID;
     try {
         await CategoryModel.deleteCategory(categoryID);
-        res.redirect("/category/allCategories");
+        res.redirect("/category/allCategory");
     } catch (error) {
         console.error(error);
         res.send("Error deleting the category");
@@ -111,11 +143,9 @@ exports.displayCatDetail = async (req, res) => {
 
     try {
         // 2. Fetch the category name (so we can display "Songs in Pop" at the top of the page)
-        // Note: Change 'findByCategoryId' to whatever your CategoryModel method is actually named!
         let category = await CategoryModel.findByCategoryId(categoryID);
 
         // 3. Fetch ONLY the songs that belong to this category
-        // Note: Change 'findSongsByCategory' to whatever your SongModel method is named!
         let filteredSongs = await SongModel.findSongsByCat(categoryID);
         for (i = 0; i < filteredSongs.length; i++) {
             let currentSong = filteredSongs[i]

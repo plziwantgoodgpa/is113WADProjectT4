@@ -21,7 +21,7 @@ const reviewSchema = new mongoose.Schema({
     },
     review_date_time: {
         type: Date,
-        default: Date.now
+        default: Date.now()
     }
 });
 
@@ -49,7 +49,7 @@ exports.editReview = function(song_id, username, updatedData) {
         { song_id: song_id, username: username },
         updatedData
     );
-};
+}; 
 
 exports.deleteReview = function(song_id, username) {
     return Review.deleteOne({ song_id: song_id, username: username });

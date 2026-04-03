@@ -24,11 +24,7 @@ const userSchema = new mongoose.Schema({
         required: [true, 'A user must have a role'],
         enum: ['user', 'admin'], 
         default: 'user'
-    }
-    // bio:{
-    //      type: String,
-    //      default: 'no bio'
-    // }
+    },
 });
 
 const User = mongoose.model('User', userSchema, 'User');
@@ -53,4 +49,9 @@ exports.updateUserProfile = function(username, updatedData) {
         { $set: { bio: updatedData.bio } },
         { returnDocument: 'after', runValidators: true }
     );
+};
+
+exports.removeUser = function (username) {
+    // Finds the specific u and removes it from MongoDB
+    return User.findOneAndDelete({ username: username });
 };

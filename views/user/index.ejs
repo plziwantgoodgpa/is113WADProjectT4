@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>My Playlists</title>
+    <title>User Management</title>
 
     <link rel="stylesheet" href="/css/style.css">
     <link rel="stylesheet" href="/css/songTable.css">
@@ -19,7 +19,7 @@
             <a href="/song/popularSong">Popular</a>
             <a href="/song/allsong">Songs</a>
             <a href="/category/allCategory">Categories</a>
-            <a href="/playlist" style="color: #ffffff;">Playlists</a>
+            <a href="/playlist">Playlists</a>
             <a href="/user/profile" class="btn">Profile</a>
             <a href="/user/logout" class="btn btn-outline">Log out</a>
         </div>
@@ -28,42 +28,34 @@
     <div class="container">
 
         <div class="page-header">
-            <h1>My Playlists</h1>
-            <a href="/playlist/create" class="btn">+ New Playlist</a>
+            <h1>All Registered Users</h1>
         </div>
 
-        <% if (playlists.length === 0) { %>
+        <% if (users.length === 0) { %>
             <div class="empty-state">
-                <h2>No playlists yet</h2>
-                <p>Create your first playlist and start adding songs.</p>
-                <br>
-                <a href="/playlist/create" class="btn">+ Create Playlist</a>
+                <h2>No users found</h2>
+                <p>There are no registered users yet.</p>
             </div>
         <% } else { %>
             <table class="song-table">
                 <thead>
                     <tr>
                         <th>#</th>
-                        <th>Playlist Name</th>
-                        <th>Songs</th>
-                        <th>Created</th>
+                        <th>Username</th>
+                        <th>Role</th>
                         <th>Actions</th>
                     </tr>
                 </thead>
                 <tbody>
-                    <% playlists.forEach((playlist, index) => { %>
+                    <% users.forEach((user, index) => { %>
                         <tr>
                             <td><%= index + 1 %></td>
+                            <td><%= user.username %></td>
+                            <td><%= user.user_role %></td>
                             <td>
-                                <a href="/playlist/<%= playlist.playList_id %>" style="color: #1db954; text-decoration: none; font-weight: 600;">
-                                    <%= playlist.PlayListName %>
-                                </a>
-                            </td>
-                            <td><%= playlist.songs.length %> songs</td>
-                            <td><%= new Date(playlist.date_created).toLocaleDateString() %></td>
-                            <td style="display: flex; gap: 8px;">
-                                <a href="/playlist/<%= playlist.playList_id %>" class="btn btn-small">View</a>
-                                <a href="/playlist/delete/<%= playlist.playList_id %>" class="delete-btn btn-small">Delete</a>
+                                <form action="/user/delete?username=<%= user.username %>" method="POST">
+                                    <button type="submit" class="delete-btn btn-small" onclick="return confirm('Are you sure?')">Delete</button>
+                                </form>
                             </td>
                         </tr>
                     <% }) %>
