@@ -30,7 +30,7 @@ exports.renderAddForm = (req, res) => {
         // This sends a popup alert to the browser, then redirects them to the library
         return res.send('<script>alert("Access Denied: You do not have permission to view this page."); window.location.href="/song/allSong";</script>');
     }
-    res.render("category/addCategory", { username, error: errMsg ,user_role});
+    res.render("category/addCategory", { username, error: errMsg, user_role });
 };
 
 exports.insertCategory = async (req, res) => {
@@ -72,7 +72,7 @@ exports.showEditForm = async (req, res) => {
     // SECURITY CHECK: Kick out anyone who isn't an admin
     if (user_role !== "admin") {
         // This sends a popup alert to the browser, then redirects them to the library
-        return res.send('<script>alert("Access Denied: You do not have permission to view this page."); window.location.href="/song/allSong";</script>');
+        return res.send('<script>alert("Access Denied: You do not have permission to view this page."); window.location.href="/cateogry/allCategory";</script>');
     }
 
     if (!categoryID) return res.redirect("/category/allCategory");
@@ -116,6 +116,17 @@ exports.updateCategory = async (req, res) => {
 
 exports.deleteCategory = async (req, res) => {
     let categoryID = req.query.categoryID;
+    let user_role = undefined;
+    let username = undefined;
+
+    if (req.session.user != undefined) {
+        user_role = req.session.user.role;
+        username = req.session.user.username;
+    }
+    if (user_role !== "admin") {
+        // This sends a popup alert to the browser, then redirects them to the library
+        return res.send('<script>alert("Access Denied: You do not have permission to view this page."); window.location.href="/category/allCategory";</script>');
+    }
     try {
         await CategoryModel.deleteCategory(categoryID);
         res.redirect("/category/allCategory");

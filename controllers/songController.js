@@ -494,7 +494,7 @@ exports.showEditSongForm = async (req, res) => {
 
         // Pass BOTH the specific song and the list of categories to EJS
         res.render("song/editSong", {
-            user: req.session.user,
+            user_role,
             song: song,
             categories: categories,
             username: username
@@ -538,6 +538,17 @@ exports.updateSong = async (req, res) => {
 // --- DELETE SONG CONTROLLER ---
 exports.deleteSong = async (req, res) => {
     let songID = req.query.songID; // Gets the ID from the URL (e.g., ?songID=101)
+        let user_role = undefined;
+    let username = undefined;
+
+    if (req.session.user != undefined) {
+        user_role = req.session.user.role;
+        username = req.session.user.username;
+    }
+    if (user_role !== "admin") {
+        // This sends a popup alert to the browser, then redirects them to the library
+        return res.send('<script>alert("Access Denied: You do not have permission to view this page."); window.location.href="/song/allSong";</script>');
+    }
     try {
         await SongModel.deleteSong(songID);
         res.redirect("/song/allSong");
@@ -587,7 +598,7 @@ exports.searchSongs = async (req, res) => {
         // console.log("search result for "+songs)
         // console.log("This is the searchTerm for song "+searchTerm)
         // Send BOTH the songs array and the search term back to the page
-        res.render("song/searchResult", { songs: songs, searchTerm: searchTerm, username: username, user: req.session.user});
+        res.render("song/searchResult", { songs: songs, searchTerm: searchTerm, username: username, user_role});
 
     } catch (error) {
         console.error("Search error:", error);

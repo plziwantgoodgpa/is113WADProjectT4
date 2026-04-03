@@ -27,19 +27,3 @@ module.exports = router;
 
 
 
-
-
-
-
-
-
-//// REVIEW TRIALL THIS IS FOR THE REVIEW SECTION BUT NEED TO MERGE. 
-
-
-
-// router.get("/allSongs", songController.retrieveAllSongs);
-// router.get("/songDetail", songController.songDetail);
-
-
-//
-
