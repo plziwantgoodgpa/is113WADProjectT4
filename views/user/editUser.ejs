@@ -6,6 +6,7 @@
     <title>Edit Profile | Spotify</title>
 
     <link rel="stylesheet" href="/css/style.css">
+    <link rel="stylesheet" href="/css/songDetailPage.css">
     <link rel="stylesheet" href="/css/songForm.css">
 </head>
 <body>
@@ -35,21 +36,27 @@
         </div>
 
         <div class="content-box">
-            <form action="/user/edit" method="POST" class="custom-form">
+            <table class="info-table">
+                <tr>
+                    <th>Username</th>
+                    <td><strong style="font-size: 1.2em;"><%= user.username %></strong></td>
+                </tr>
+                <tr>
+                    <th>Email</th>
+                    <td><%= user.email %></td>
+                </tr>
+            </table>
 
-                <div class="form-group">
-                    <label>Email</label>
-                    <input type="email" name="email" value="<%= user.email %>" required>
-                </div>
+            <div style="margin-top: 20px; padding-top: 20px; border-top: 1px solid #333;">
+                <form action="/user/edit" method="POST" class="custom-form">
+                    <div class="form-group">
+                        <label>Bio</label>
+                        <textarea name="bio" rows="5"><%= user.bio || '' %></textarea>
+                    </div>
 
-                <div class="form-group">
-                    <label>Bio</label>
-                    <textarea name="bio" rows="4"><%= user.bio %></textarea>
-                </div>
-
-                <button type="submit" class="btn">Update Profile</button>
-
-            </form>
+                    <button type="submit" class="btn">Update Bio</button>
+                </form>
+            </div>
         </div>
 
     </div>

@@ -50,8 +50,7 @@ exports.addUser = function(userData) {
 exports.updateUserProfile = function(username, updatedData) {
     return User.findOneAndUpdate(
         { username: username },
-        updatedData,
+        { $set: { bio: updatedData.bio } },
         { returnDocument: 'after', runValidators: true }
     );
 };
-

@@ -55,6 +55,7 @@ exports.showEditUser = async (req, res) => {
         if (!req.session.user) return res.redirect('/user/login');
 
         const username = req.session.user.username;
+
         const user = await User.findUser(username);
 
         if (!user) {
@@ -62,9 +63,10 @@ exports.showEditUser = async (req, res) => {
         }
 
         res.render('user/editUser', { user });
+
     } catch (error) {
         console.error(error);
-        res.send('Error loading edit profile page');
+        res.send('Error loading edit page');
     }
 };
 
@@ -73,10 +75,9 @@ exports.editUser = async (req, res) => {
         if (!req.session.user) return res.redirect('/user/login');
 
         const username = req.session.user.username;
-        const { email, bio } = req.body;
+        const { bio } = req.body;
 
         const updatedUser = await User.updateUserProfile(username, {
-            email: email,
             bio: bio
         });
 
@@ -84,10 +85,7 @@ exports.editUser = async (req, res) => {
             return res.send('User not found');
         }
 
-        // update session with new email
-        req.session.user.email = updatedUser.email;
-
-        res.redirect('/');
+        res.redirect('/user/profile');
     } catch (error) {
         console.error(error);
         res.send('Error updating user');
